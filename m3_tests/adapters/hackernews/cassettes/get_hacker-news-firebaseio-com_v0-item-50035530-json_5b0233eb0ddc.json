@@ -10,12 +10,15 @@
     "body_format": "json",
     "body": {
       "by": "tosh",
-      "descendants": 1,
+      "descendants": 25,
       "id": 50035530,
       "kids": [
-        50036233
+        50036555,
+        50036233,
+        50037368,
+        50036624
       ],
-      "score": 19,
+      "score": 80,
       "time": 1791655729,
       "title": "Why DuckDB 2.0 is faster",
       "type": "story",

@@ -30,10 +30,10 @@ agent: ## Real-agent tool-selection tests (costs tokens): make agent HARNESS=cod
 	@# Needs a harness CLI plus credentials; see docs/agent-testing.md and .env.example.
 	KEYLESS_MCP_HTTP_MODE=live $(M3) test --python $(PY) --harness $(HARNESS)=$(MODEL) --trials $(TRIALS) $(M3_ARGS) -- m3_tests/agent -m agent $(if $(K),-k "$(K)") -q -rs
 
-record: ## Re-record an adapter's cassettes from the real API: make record ADAPTER=arxiv
+record: ## Re-record an adapter's cassettes from the real API and replay-check them: make record ADAPTER=arxiv
 	@test -n "$(ADAPTER)" || { echo "usage: make record ADAPTER=<name>"; exit 1; }
 	@test -d m3_tests/adapters/$(ADAPTER) || { echo "no such adapter: $(ADAPTER)"; exit 1; }
-	@# Record into a temp dir; the committed cassettes are replaced only if every test passed.
+	@# Record into a temp dir; the committed cassettes are replaced only if every test passed, then replayed once to check.
 	@tmp=$$(mktemp -d) && trap 'rm -rf "$$tmp"' EXIT && \
 	if KEYLESS_MCP_HTTP_MODE=record KEYLESS_MCP_RECORD_ROOT="$$tmp" $(M3) test --python $(PY) -- m3_tests/adapters/$(ADAPTER) -m "not live and not agent" -q; then \
 	  ls "$$tmp/$(ADAPTER)"/*.json >/dev/null 2>&1 || { echo "record: no requests were recorded; existing cassettes kept"; exit 1; }; \
@@ -41,6 +41,12 @@ record: ## Re-record an adapter's cassettes from the real API: make record ADAPT
 	  rm -f m3_tests/adapters/$(ADAPTER)/cassettes/*.json && \
 	  cp "$$tmp/$(ADAPTER)"/*.json m3_tests/adapters/$(ADAPTER)/cassettes/ && \
 	  echo "record: wrote $$(ls m3_tests/adapters/$(ADAPTER)/cassettes/*.json | wc -l | tr -d ' ') cassette(s) to m3_tests/adapters/$(ADAPTER)/cassettes"; \
+	  echo "record: replaying the new cassettes offline to check them"; \
+	  KEYLESS_MCP_HTTP_MODE=replay $(M3) test --python $(PY) -- m3_tests/adapters/$(ADAPTER) -m "not live and not agent" -q || { \
+	    echo "record: the new cassettes are in place but a replay test failed, so it pins a value that moves upstream."; \
+	    echo "record: fix that test: read the expected value from the cassette (m3_tests/_support/cassettes.py, 'Frozen in replay, shape in live' in docs/adapter-contract.md)."; \
+	    echo "record: or restore the old cassettes with: git checkout m3_tests/adapters/$(ADAPTER)/cassettes"; \
+	    exit 1; }; \
 	else \
 	  echo "record: tests failed against the live API; existing cassettes were left untouched"; exit 1; \
 	fi

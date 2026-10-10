@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import pytest
 
+from m3_tests._support.cassettes import recorded
 from m3_tests._support.results import result_text
+
+API = "https://hacker-news.firebaseio.com/v0"
 
 pytestmark = pytest.mark.m3(suite_name="hackernews")
 
@@ -31,13 +34,16 @@ def test_top_stories_returns_ranked_stories_with_discussion_links(connect, repla
     assert all(s["type"] in {"story", "job", "poll"} for s in data["stories"])
     assert len({s["id"] for s in data["stories"]}) == 3
     if replaying:
-        # Exact values of the recorded cassette; the live front page changes every minute.
-        assert [s["id"] for s in data["stories"]] == [49991852, 50034081, 50035530]
-        assert data["stories"][1]["title"] == "Knuth reward check"
-        assert [s["type"] for s in data["stories"]] == ["story"] * 3
-        assert [s["score"] for s in data["stories"]] == [70, 89, 19]
-        assert [s["comments"] for s in data["stories"]] == [16, 32, 1]
-        assert [s["by"] for s in data["stories"]] == ["Michelangelo11", "Curiositry", "tosh"]
+        # The front page moves every minute, so expect what the cassettes recorded, not literals.
+        top_ids = recorded("hackernews", f"{API}/topstories.json")[:3]
+        assert [s["id"] for s in data["stories"]] == top_ids
+        for story in data["stories"]:
+            item = recorded("hackernews", f"{API}/item/{story['id']}.json")
+            assert story["title"] == item["title"]
+            assert story["type"] == item["type"]
+            assert story["score"] == item["score"]
+            assert story["comments"] == item.get("descendants", 0)
+            assert story["by"] == item["by"]
     for story in data["stories"]:
         assert story["title"]
         assert story["hn_url"] == f"https://news.ycombinator.com/item?id={story['id']}"

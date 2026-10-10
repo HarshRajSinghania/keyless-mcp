@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from m3_tests._support.cassettes import recorded
 from m3_tests._support.results import result_text
 
 pytestmark = pytest.mark.m3(suite_name="npm")
@@ -51,7 +52,8 @@ def test_get_package_reports_license_author_and_repository_of_is_odd(connect, re
     assert data["latest_version"].count(".") == 2
     assert data["deprecated"] is None
     if replaying:
-        assert data["latest_version"] == "3.0.1"  # from the recorded cassette
+        doc = recorded("npm", "https://registry.npmjs.org/is-odd")
+        assert data["latest_version"] == doc["dist-tags"]["latest"]
 
 
 def test_get_package_accepts_a_scoped_name(connect) -> None:

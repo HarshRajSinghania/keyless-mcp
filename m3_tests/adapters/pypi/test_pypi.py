@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from m3_tests._support.cassettes import recorded
 from m3_tests._support.results import result_text
 
 pytestmark = pytest.mark.m3(suite_name="pypi")
@@ -36,11 +37,12 @@ def test_get_package_returns_the_latest_release_of_six(connect, replaying) -> No
     assert data["release_date"].endswith("Z")
     assert isinstance(data["yanked"], bool)
     if replaying:
-        # Exact values of the recorded cassette (six 1.17.0, uploaded 2024-12-04, 29 releases).
-        assert data["version"] == "1.17.0"
-        assert data["release_count"] == 29
-        assert data["release_date"] == "2024-12-04T17:35:26.475808Z"
-        assert data["yanked"] is False
+        # The latest version and release count grow upstream, so expect the recorded document.
+        doc = recorded("pypi", "https://pypi.org/pypi/six/json")
+        assert data["version"] == doc["info"]["version"]
+        assert data["release_count"] == len(doc["releases"])
+        assert data["release_date"] == min(f["upload_time_iso_8601"] for f in doc["urls"])
+        assert data["yanked"] is bool(doc["info"]["yanked"])
 
 
 def test_get_release_returns_a_specific_version_with_its_files(connect) -> None:

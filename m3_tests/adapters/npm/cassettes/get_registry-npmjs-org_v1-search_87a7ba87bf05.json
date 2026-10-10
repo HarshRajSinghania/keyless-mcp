@@ -54,9 +54,9 @@
               "popularity": 1,
               "quality": 1
             },
-            "final": 2721.0586
+            "final": 2722.0503
           },
-          "searchScore": 2721.0586,
+          "searchScore": 2722.0503,
           "updated": "2026-10-10T01:03:37.891Z"
         },
         {
@@ -112,9 +112,9 @@
               "popularity": 1,
               "quality": 1
             },
-            "final": 594.7603
+            "final": 595.0573
           },
-          "searchScore": 594.7603,
+          "searchScore": 595.0573,
           "updated": "2026-10-10T00:23:22.679Z"
         },
         {
@@ -161,13 +161,13 @@
               "popularity": 1,
               "quality": 1
             },
-            "final": 591.1133
+            "final": 591.4228
           },
-          "searchScore": 591.1133,
+          "searchScore": 591.4228,
           "updated": "2026-10-10T00:20:33.207Z"
         }
       ],
-      "time": "2026-10-10T19:47:37.842Z",
+      "time": "2026-10-10T21:41:35.999Z",
       "total": 12996
     }
   }

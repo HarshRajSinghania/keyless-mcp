@@ -1,0 +1,4 @@
+# M3 project identity. Keep project_id stable when renaming.
+schema_version = 1
+project_id = "7927333f-198f-4a2d-94d0-4bf6504fa5f0"
+project_name = "keyless-mcp"

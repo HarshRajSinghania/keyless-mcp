@@ -8,3 +8,9 @@ dist/
 .superpowers/
 .ruff_cache/
 .pytest_cache/
+.DS_Store
+*.egg-info/
+.mypy_cache/
+.agents/
+.claude/
+skills-lock.json

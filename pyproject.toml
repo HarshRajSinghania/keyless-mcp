@@ -1,0 +1,46 @@
+[project]
+name = "keyless-mcp"
+version = "0.1.0"
+description = "One MCP server wrapping free, no-auth public APIs, grouped into toolsets and tested with M3."
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = [
+  "mcp>=2.3,<3",
+  "httpx>=0.27",
+  "pyyaml>=6",
+]
+
+[project.scripts]
+keyless-mcp = "keyless_mcp.__main__:main"
+
+[dependency-groups]
+dev = [
+  "sf-m3[pytest,storage,judge]==0.2.40",
+  "pytest>=8,<10",
+  "pytest-timeout>=2.4,<3",
+  "pytest-xdist>=3",
+  "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/keyless_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["m3_tests"]
+timeout = 120
+markers = [
+  "live: hits the real network (excluded from PR CI)",
+  "agent: drives an agent harness and needs model credentials (excluded from PR CI)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "m3_tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Pinned M3 CLI for this project (a global `m3` may be a different version).
+# The CLI version must match the `sf-m3` version in pyproject.toml exactly.
+exec uvx --from "sf-m3-cli==${M3_CLI_VERSION:-0.2.40}" m3 "$@"

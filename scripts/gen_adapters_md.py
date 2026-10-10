@@ -223,7 +223,9 @@ def main() -> int:
         )
         print("\n".join(list(diff)[:40]))
         print(
-            f"\n{args.output.name} is out of date. Run `make adapters-md` and commit the result.",
+            f"\n{args.output.name} is out of date. Run `make adapters-md` and commit the result. "
+            f"After a merge conflict in {args.output.name}, keep either side first, then run the "
+            "same command: it rewrites the whole file.",
             file=sys.stderr,
         )
         return 1

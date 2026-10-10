@@ -3,8 +3,9 @@ name: Release
 # Runs when a version tag is pushed (`git tag v0.1.0 && git push origin v0.1.0`) and nowhere else.
 #
 #   verify          tag matches pyproject.toml and server.json, tag is on main, tests pass, build
-#   pypi            publish the wheel and sdist to PyPI (trusted publishing, no token)
 #   docker          build, smoke-test and push ghcr.io/sineframe/keyless-mcp:<version> and :latest
+#   pypi            publish the wheel and sdist to PyPI (trusted publishing, no token); runs only
+#                   after verify and docker pass, because a PyPI release is irreversible
 #   mcp-registry    publish server.json to the MCP Registry (GitHub OIDC, no token)
 #
 # One-time setup the maintainers do outside this repo:
@@ -84,7 +85,9 @@ jobs:
 
   pypi:
     name: Publish to PyPI
-    needs: verify
+    # A PyPI release cannot be undone, so publish only after the image has built and passed its
+    # smoke test.
+    needs: [verify, docker]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     environment:

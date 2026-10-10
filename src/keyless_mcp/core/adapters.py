@@ -10,6 +10,7 @@ from __future__ import annotations
 import functools
 import importlib
 import inspect
+import logging
 import pkgutil
 import re
 from collections.abc import Callable, Iterable
@@ -41,6 +42,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9]*(_[a-z0-9]+)*$")
 PUBLIC_READ_ONLY = ToolAnnotations(
     read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=True
 )
+LOGGER = logging.getLogger("keyless_mcp")
 _F = TypeVar("_F", bound=Callable[..., Any])
 # AttributeError covers ``None.get(...)`` / ``list.get(...)`` on a response of the wrong type.
 _SHAPE_ERRORS = (KeyError, TypeError, IndexError, AttributeError)
@@ -188,8 +190,9 @@ class ToolRegistry:
 
         Adapters index into parsed JSON (``data["items"][0]["name"]``). When the API changes shape
         that raises ``KeyError``, ``TypeError``, ``IndexError`` or ``AttributeError``, which would
-        otherwise reach the agent as an opaque failure. The wrapper keeps the signature and
-        annotations, so the MCP input schema is unchanged.
+        otherwise reach the agent as an opaque failure. The same exceptions also come from adapter
+        bugs, so the message says so and the full traceback is logged to stderr. The wrapper keeps
+        the signature and annotations, so the MCP input schema is unchanged.
         """
         adapter = self._adapter
 
@@ -198,9 +201,14 @@ class ToolRegistry:
                 detail = f"missing {exc.args[0]!r}" if exc.args else "missing key"
             else:
                 detail = f"{type(exc).__name__}: {exc}"
+            # stderr is safe for the stdio transport; stdout carries the MCP protocol.
+            LOGGER.warning(
+                "%s: unexpected %s in tool %s", adapter, type(exc).__name__, tool_name, exc_info=exc
+            )
             return UpstreamError(
                 f"{adapter}: upstream response had an unexpected shape ({detail}) while running "
-                f"{tool_name}. The API may have changed; please report this."
+                f"{tool_name}, or the adapter has a bug. The API may have changed; please report "
+                "this."
             )
 
         if inspect.iscoroutinefunction(fn):

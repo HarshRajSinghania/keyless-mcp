@@ -1,0 +1,58 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://en.wikipedia.org/w/rest.php/v1/search/page?limit=3&q=alan+turing",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "pages": [
+        {
+          "anchor": null,
+          "description": "English computer scientist (1912–1954)",
+          "excerpt": "apologised for the &quot;appalling way [<span class=\"searchmatch\">Turing</span>] was treated&quot;, and Queen Elizabeth II granted <span class=\"searchmatch\">Turing</span> a pardon in 2013. The <span class=\"searchmatch\">Alan</span> <span class=\"searchmatch\">Turing</span> law refers to part of a 2017",
+          "id": 1208,
+          "key": "Alan_Turing",
+          "matched_title": null,
+          "thumbnail": {
+            "duration": null,
+            "height": 80,
+            "mimetype": "image/jpeg",
+            "url": "//thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Alan_turing_header.jpg/60px-Alan_turing_header.jpg?utm_source=en.wikipedia.org&utm_campaign=rest&utm_content=thumbnail",
+            "width": 60
+          },
+          "title": "Alan Turing"
+        },
+        {
+          "anchor": null,
+          "description": "Biography by Andrew Hodges",
+          "excerpt": "Annotated <span class=\"searchmatch\">Turing</span> (2008) Prof: <span class=\"searchmatch\">Alan</span> <span class=\"searchmatch\">Turing</span> Decoded (2015) The <span class=\"searchmatch\">Turing</span> Guide (2017) &quot;<span class=\"searchmatch\">Alan</span> <span class=\"searchmatch\">Turing</span>: The Enigma&quot;. <span class=\"searchmatch\">turing</span>.org.uk. Retrieved 3 August 2017. &quot;<span class=\"searchmatch\">Alan</span> Turing:",
+          "id": 54756168,
+          "key": "Alan_Turing:_The_Enigma",
+          "matched_title": null,
+          "thumbnail": null,
+          "title": "Alan Turing: The Enigma"
+        },
+        {
+          "anchor": null,
+          "description": "American annual computer science prize",
+          "excerpt": "Staff (2014). &quot;ACM&#039;s <span class=\"searchmatch\">Turing</span> Award prize raised to $1 million&quot;. Communications of the ACM. 57 (12): 20. doi:10.1145/2685372. &quot;A. M. <span class=\"searchmatch\">Turing</span> Award&quot;. Association",
+          "id": 31093,
+          "key": "Turing_Award",
+          "matched_title": null,
+          "thumbnail": {
+            "duration": null,
+            "height": 90,
+            "mimetype": "image/jpeg",
+            "url": "//thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Turing_statue_Surrey.jpg/60px-Turing_statue_Surrey.jpg?utm_source=en.wikipedia.org&utm_campaign=rest&utm_content=thumbnail",
+            "width": 60
+          },
+          "title": "Turing Award"
+        }
+      ]
+    }
+  }
+}

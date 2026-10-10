@@ -12,7 +12,7 @@ from .adapters import (
 )
 from .errors import AdapterError, CassetteMiss, InvalidInput, KeylessError, UpstreamError
 from .http import AdapterHttp, HttpClient, HttpConfig, HttpMode
-from .text import tidy, truncate
+from .text import strip_html, tidy, truncate
 
 __all__ = [
     "PUBLIC_READ_ONLY",
@@ -32,6 +32,7 @@ __all__ = [
     "discover_adapters",
     "parse_toolsets",
     "register_adapters",
+    "strip_html",
     "tidy",
     "truncate",
 ]

@@ -1,0 +1,51 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://en.wikipedia.org/api/rest_v1/page/summary/Mercury",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "content_urls": {
+        "desktop": {
+          "edit": "https://en.wikipedia.org/wiki/Mercury?action=edit",
+          "page": "https://en.wikipedia.org/wiki/Mercury",
+          "revisions": "https://en.wikipedia.org/wiki/Mercury?action=history",
+          "talk": "https://en.wikipedia.org/wiki/Talk:Mercury"
+        },
+        "mobile": {
+          "edit": "https://en.wikipedia.org/wiki/Mercury?action=edit",
+          "page": "https://en.wikipedia.org/wiki/Mercury",
+          "revisions": "https://en.wikipedia.org/wiki/Special:History/Mercury",
+          "talk": "https://en.wikipedia.org/wiki/Talk:Mercury"
+        }
+      },
+      "description": "Topics referred to by the same term",
+      "description_source": "local",
+      "dir": "ltr",
+      "displaytitle": "<span lang=\"en\" dir=\"ltr\"><span class=\"mw-page-title-main\">Mercury</span></span>",
+      "extract": "Mercury most commonly refers to:Mercury (planet), the closest planet to the Sun\nMercury (element), a chemical element\nMercury (mythology), a Roman deity",
+      "extract_html": "<p><b>Mercury</b> most commonly refers to:</p><ul><li>Mercury (planet), the closest planet to the Sun</li>\n<li>Mercury (element), a chemical element</li>\n<li>Mercury (mythology), a Roman deity</li></ul>",
+      "lang": "en",
+      "namespace": {
+        "id": 0,
+        "text": ""
+      },
+      "pageid": 19007,
+      "revision": "1379008290",
+      "tid": "174adb4d-c236-11f1-83fb-a3b2b85efcf8",
+      "timestamp": "2026-10-07T10:01:40Z",
+      "title": "Mercury",
+      "titles": {
+        "canonical": "Mercury",
+        "display": "<span lang=\"en\" dir=\"ltr\"><span class=\"mw-page-title-main\">Mercury</span></span>",
+        "normalized": "Mercury"
+      },
+      "type": "disambiguation",
+      "wikibase_item": "Q48397"
+    }
+  }
+}

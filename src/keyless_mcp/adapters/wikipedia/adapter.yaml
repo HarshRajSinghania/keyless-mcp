@@ -1,0 +1,8 @@
+name: wikipedia
+title: Wikipedia
+description: Search Wikipedia articles and read an article's introductory summary in any language edition.
+toolset: science
+base_url: https://en.wikipedia.org
+docs_url: https://api.wikimedia.org/wiki/Core_REST_API
+rate_limit_per_minute: 60
+author: sineframe

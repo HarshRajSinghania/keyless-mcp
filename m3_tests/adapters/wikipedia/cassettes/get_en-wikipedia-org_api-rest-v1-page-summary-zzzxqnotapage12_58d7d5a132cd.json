@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://en.wikipedia.org/api/rest_v1/page/summary/Zzzxqnotapage123",
+    "body": null
+  },
+  "response": {
+    "status": 404,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "status": 404,
+      "type": "Internal error"
+    }
+  }
+}

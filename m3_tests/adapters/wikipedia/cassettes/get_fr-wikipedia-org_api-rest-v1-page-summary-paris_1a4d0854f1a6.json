@@ -1,0 +1,65 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://fr.wikipedia.org/api/rest_v1/page/summary/Paris",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "content_urls": {
+        "desktop": {
+          "edit": "https://fr.wikipedia.org/wiki/Paris?action=edit",
+          "page": "https://fr.wikipedia.org/wiki/Paris",
+          "revisions": "https://fr.wikipedia.org/wiki/Paris?action=history",
+          "talk": "https://fr.wikipedia.org/wiki/Discussion:Paris"
+        },
+        "mobile": {
+          "edit": "https://fr.wikipedia.org/wiki/Paris?action=edit",
+          "page": "https://fr.wikipedia.org/wiki/Paris",
+          "revisions": "https://fr.wikipedia.org/wiki/Special:History/Paris",
+          "talk": "https://fr.wikipedia.org/wiki/Discussion:Paris"
+        }
+      },
+      "coordinates": {
+        "lat": 48.856578,
+        "lon": 2.351828
+      },
+      "description": "capitale et ville la plus peuplée de France",
+      "description_source": "central",
+      "dir": "ltr",
+      "displaytitle": "<span lang=\"fr\" dir=\"ltr\"><span class=\"mw-page-title-main\">Paris</span></span>",
+      "extract": "Paris est la capitale de la France et le chef-lieu de la région Île-de-France. Elle est située au centre du bassin qui porte son nom, sur une boucle de la Seine, entre les confluents avec la Marne et l'Oise. Ville mondiale, elle compte parmi les métropoles les plus importantes d'Europe.",
+      "extract_html": "<p><b>Paris</b> est la capitale de la France et le chef-lieu de la région Île-de-France. Elle est située au centre du bassin qui porte son nom, sur une boucle de la Seine, entre les confluents avec la Marne et l'Oise. Ville mondiale, elle compte parmi les métropoles les plus importantes d'Europe.</p>",
+      "lang": "fr",
+      "namespace": {
+        "id": 0,
+        "text": ""
+      },
+      "originalimage": {
+        "height": 2870,
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg/3840px-La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "width": 4592
+      },
+      "pageid": 681159,
+      "revision": "240223788",
+      "thumbnail": {
+        "height": 206,
+        "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg/330px-La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+        "width": 330
+      },
+      "tid": "f00132b6-c41a-11f1-ac76-79df2773e354",
+      "timestamp": "2026-10-09T19:52:20Z",
+      "title": "Paris",
+      "titles": {
+        "canonical": "Paris",
+        "display": "<span lang=\"fr\" dir=\"ltr\"><span class=\"mw-page-title-main\">Paris</span></span>",
+        "normalized": "Paris"
+      },
+      "type": "standard",
+      "wikibase_item": "Q90"
+    }
+  }
+}

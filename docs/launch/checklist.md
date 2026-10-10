@@ -9,7 +9,7 @@ repeated here so you do not have to hunt for them.
 - [ ] The `finance`, `reference` and `fun` toolsets are already in the code (they have no adapters yet, so ADAPTERS.md lists them as waiting). Run `make test`, `make lint` and `uv run python scripts/gen_adapters_md.py --check` once more before you push.
 - [ ] Read `README.md` once more on GitHub's renderer after the push. Its links are absolute and only work once the repository exists at `github.com/sineframe/keyless-mcp`.
 - [ ] TODO (optional): record a short screen capture of an agent using a tool. The README uses a text transcript instead of a GIF, so nothing links to `docs/demo.gif` yet. If you record one, add it to the README and commit it.
-- [ ] Check that no file contains a key, a token or a personal path: `git grep -nE "(sk-|ghp_|AKIA)"` should print nothing.
+- [ ] Check that no file contains a key, a token or a personal path: `git grep -nE "(sk-|ghp_|AKIA)" -- . ":!docs/launch/checklist.md"` should print nothing.
 
 ## 2. Create the repository
 
@@ -19,7 +19,7 @@ repeated here so you do not have to hunt for them.
 - [ ] Enable Discussions. The issue template config links to it.
 - [ ] Enable private vulnerability reporting, which SECURITY.md mentions.
 - [ ] Install the [all-contributors bot](https://allcontributors.org/docs/en/bot/installation) on the repository. The README's contributors section tells people to comment `@all-contributors please add @handle for code`, which only works once the bot is there.
-- [ ] Branch protection on `main`: require the `Lint and generated files` and `M3 tests (offline replay)` checks from `ci.yml`.
+- [ ] Branch protection on `main`: require the `Lint and generated files`, `M3 tests (offline replay)` and `Container image builds and starts` checks from `ci.yml`.
 - [ ] Confirm CI is green on the first push, and that the CI badge in the README turns green.
 
 ## 3. Release setup (maintainer steps from the workflow headers)
@@ -45,7 +45,7 @@ MCP Registry (`release.yml`, last job):
 ## 4. First release
 
 - [ ] From `main`: `git tag v0.1.0 && git push origin v0.1.0`. The tag must equal the version in `pyproject.toml` and `server.json`, or the `verify` job fails.
-- [ ] Watch the jobs in order: verify, pypi, docker, mcp-registry.
+- [ ] Watch the jobs in order: verify, docker, pypi, mcp-registry. PyPI publishes only after the image has built and passed its smoke test.
 - [ ] On a clean machine, run `uvx keyless-mcp --list-tools` and `docker run -i --rm ghcr.io/sineframe/keyless-mcp --version`. Nobody has built the Docker image yet, so this is its first real test.
 - [ ] Check that the PyPI page shows the README with working links and badges.
 - [ ] Flip the README quick start to the released form. Until the first release it leads with `uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp` in every client config. After PyPI has the package: make `uvx keyless-mcp` (and `"args": ["keyless-mcp"]`) the main command in the Claude Code, Claude Desktop, Cursor, VS Code, Codex and "Choosing toolsets" examples, delete the "not on PyPI yet" paragraph, and turn the "After the first release" section into a short "Run from GitHub or a clone" note. Remove the Docker note about the first release too.

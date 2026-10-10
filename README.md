@@ -2,7 +2,7 @@
 
 <!-- mcp-name: io.github.sineframe/keyless-mcp -->
 
-One MCP server that gives your agent 16 tools over free public APIs: arXiv, Wikipedia, PyPI, npm, OSV, Open-Meteo, the World Bank and Hacker News. It needs no API keys and no accounts.
+One MCP server that gives your agent tools over free public APIs such as arXiv, Wikipedia, PyPI, npm, OSV, Open-Meteo, the World Bank and Hacker News. It needs no API keys and no accounts.
 
 [![CI](https://github.com/sineframe/keyless-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sineframe/keyless-mcp/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/keyless-mcp)](https://pypi.org/project/keyless-mcp/)
@@ -14,7 +14,7 @@ One MCP server that gives your agent 16 tools over free public APIs: arXiv, Wiki
 
 Most MCP servers need a token before they do anything. Plenty of useful data sits behind public APIs that need none, and keyless-mcp wraps those in one server so you add it once and your agent can look things up right away.
 
-It currently has 8 adapters and 16 tools, grouped into toolsets so you can switch groups on or off. Four of the seven toolsets have adapters today:
+The tools are grouped into toolsets, so you can switch groups on or off. `make tools` from a clone, or [ADAPTERS.md](https://github.com/sineframe/keyless-mcp/blob/main/ADAPTERS.md), lists every adapter and tool. These are the adapters so far:
 
 - science: `arxiv`, `wikipedia`
 - dev: `npm`, `osv`, `pypi`
@@ -168,11 +168,11 @@ The endpoint is `http://127.0.0.1:8000/mcp`. It binds to localhost by default. I
 The server has seven toolsets and offers every tool by default. Fewer tools means less for the agent to weigh, so pick the ones you need with a flag or an environment variable:
 
 ```sh
-keyless-mcp --toolsets dev,geo
-KEYLESS_MCP_TOOLSETS=dev,geo keyless-mcp
+uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp --toolsets dev,geo
+KEYLESS_MCP_TOOLSETS=dev,geo uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp
 ```
 
-If both are set, the flag wins. In a client, add the flag after the server command. For example:
+From a clone, use `uv run keyless-mcp --toolsets dev,geo` instead. If both the flag and the variable are set, the flag wins. In a client, add the flag after the server command. For example:
 
 ```sh
 claude mcp add keyless -- uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp --toolsets dev,geo
@@ -211,7 +211,7 @@ Until an adapter lands in one of those last three, selecting only that toolset s
 
 Every tool is tested with [M3](https://github.com/sineframe/m3), a testing tool for MCP servers and agents. The tests start the real server over stdio, call each tool through an MCP client, and check the results.
 
-- On every pull request, 196 tests run offline. The server replays recorded HTTP responses (cassettes), so CI needs no network and no secrets, and a fork's pull request runs the same checks as a maintainer's.
+- On every pull request, the whole suite runs offline. The server replays recorded HTTP responses (cassettes), so CI needs no network and no secrets, and a fork's pull request runs the same checks as a maintainer's.
 - Every night, a live lane calls the real APIs. If an upstream changes shape or goes down, the job opens an `upstream-drift` issue.
 - Every night, an agent lane gives Claude Code and Codex plain-English questions that never name a tool, such as "Are there known security vulnerabilities in version 2.4.1 of the PyPI package jinja2?". It checks whether the agent picked the right tool and made a successful call, over 3 trials per prompt. This lane costs model tokens, so it runs only where the maintainers have set credentials.
 
@@ -260,7 +260,7 @@ When a tool runs, the server makes a request to that tool's public API with the 
 
 Can I use it without an MCP client?
 
-Yes. `uvx keyless-mcp --list-tools` prints the catalog, and the HTTP transport lets any MCP client connect by URL. The tools are plain Python functions in `src/keyless_mcp/adapters/`.
+Yes. `uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp --list-tools` prints the catalog, and the HTTP transport lets any MCP client connect by URL. The tools are plain Python functions in `src/keyless_mcp/adapters/`.
 
 A tool returned an error. Is it a bug?
 

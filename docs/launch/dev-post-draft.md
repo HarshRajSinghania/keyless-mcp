@@ -1,6 +1,6 @@
 # DEV post draft
 
-Draft for the DEV Open-Source AI Challenge entries (Week 3 starts Oct 19, Week 4 starts Oct 26). The prompts are published when each week opens, so read the prompt first and adjust the opening and the "why it fits" paragraph. Lines in square brackets are for you to fill in with your own words or to delete. Before you post, re-run the jinja2 call quoted in "What I built" (`osv_query_package` with ecosystem `PyPI`, name `jinja2`, version `2.4.1`) and update the advisory count and ids to whatever OSV returns that day. The figures in this draft are from 2026-10-11. Nothing here is posted anywhere.
+Draft for the DEV Open-Source AI Challenge entries (Week 3 starts Oct 19, Week 4 starts Oct 26). The prompts are published when each week opens, so read the prompt first and adjust the opening and the "why it fits" paragraph. Lines in square brackets are for you to fill in with your own words or to delete. Before you post, re-run the jinja2 call quoted in "What I built" (`osv_query_package` with ecosystem `PyPI`, name `jinja2`, version `2.4.1`) and update the advisory count and ids to whatever OSV returns that day. The figures in this draft are from 2026-10-11, and the counts (16 tools, 209 tests, 40 issues) go stale as adapters land, so recheck each one with `make tools`, `make test` and the issue list before posting. Nothing here is posted anywhere.
 
 Suggested title: keyless-mcp: one MCP server for public APIs that need no key
 
@@ -10,11 +10,13 @@ Suggested tags: `mcp`, `opensource`, `ai`, `python` (add the challenge tag from 
 
 ## What I built
 
-keyless-mcp is an MCP server that gives an agent 16 tools over free public APIs. It covers arXiv, Wikipedia, PyPI, npm, OSV vulnerabilities, Open-Meteo weather, World Bank country data and Hacker News. None of them needs an API key or an account, so setup is one line in your MCP client:
+keyless-mcp is an MCP server that gives an agent 16 tools over free public APIs [update the count before posting]. It covers arXiv, Wikipedia, PyPI, npm, OSV vulnerabilities, Open-Meteo weather, World Bank country data and Hacker News. None of them needs an API key or an account, so setup is one line in your MCP client:
 
 ```sh
 claude mcp add keyless -- uvx keyless-mcp
 ```
+
+(`uvx keyless-mcp` works once the first release is on PyPI. Until then, use `uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp`, as in the README.)
 
 Configs for Claude Desktop, Cursor, VS Code and Codex are in the README. The code is Apache-2.0 and the protocol is open, so it works with any client that speaks MCP.
 
@@ -32,7 +34,7 @@ You can also turn on only the toolsets you want. `--toolsets dev,geo` serves the
 
 I tested every tool with [M3](https://github.com/sineframe/m3), a testing tool for MCP servers and agents. There are two layers.
 
-The first runs on every pull request and needs no network. M3 starts the real server over stdio, calls each tool through an MCP client, and the server answers from recorded HTTP responses. That is 196 tests, and a pull request from a fork runs them too, with no secrets involved.
+The first runs on every pull request and needs no network. M3 starts the real server over stdio, calls each tool through an MCP client, and the server answers from recorded HTTP responses. That is 209 tests [update the count before posting], and a pull request from a fork runs them too, with no secrets involved.
 
 The second layer asks a real agent. Each prompt is a plain question that never names a tool, such as "Are there known security vulnerabilities in version 2.4.1 of the PyPI package jinja2?". The test checks which tool the agent called and whether the call succeeded. In the latest run, Codex picked the right tool on 10 of 10 prompts. That was one trial per prompt, on one day, with one model, so I treat it as a smoke check and not as a measurement. The nightly job repeats it with three trials. [Add those numbers if you have a few runs by the time you post.]
 
@@ -40,7 +42,7 @@ If you build MCP servers, this setup may be worth copying. A tool description is
 
 ## Help wanted
 
-I have opened 40 small issues, each a new adapter for a different keyless API: crossref, usgs_earthquakes, github, nominatim, frankfurter, pokeapi and more. Every one comes with the docs link, proposed tool signatures, an example request and an acceptance checklist. The scaffold is one command:
+I have opened 40 small issues [update the count before posting], each a new adapter for a different keyless API: crossref, usgs_earthquakes, github, nominatim, frankfurter, pokeapi and more. Every one comes with the docs link, proposed tool signatures, an example request and an acceptance checklist. The scaffold is one command:
 
 ```sh
 git clone https://github.com/sineframe/keyless-mcp && cd keyless-mcp

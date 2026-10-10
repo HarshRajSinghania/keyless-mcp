@@ -24,7 +24,7 @@ make setup
 make test
 ```
 
-`make setup` creates `.venv`, installs the locked dependencies, and sets up and checks the M3 test tooling. `make test` runs the whole suite offline against recorded responses. It needs no network and no API keys, and takes about 35 seconds. A green run ends with a line like `196 passed`.
+`make setup` creates `.venv`, installs the locked dependencies, and sets up and checks the M3 test tooling. `make test` runs the whole suite offline against recorded responses. It needs no network and no API keys, and takes about 35 seconds. A green run ends with a line like `N passed` and no failures.
 
 Run `make` on its own to list every command:
 
@@ -69,18 +69,20 @@ To try the server itself, `make tools` lists what it serves, and `make run` star
    make record ADAPTER=open_meteo
    ```
 
-   This runs your tests against the real API and saves each request and response as a JSON file in `m3_tests/adapters/<name>/cassettes/`. The old cassettes are replaced only if every test passed, so a failed run cannot leave you with a half-recorded set. Choose queries with short answers so the files stay small, and read them before committing. Request headers are never stored.
+   This runs your tests against the real API and saves each request and response as a JSON file in `m3_tests/adapters/<name>/cassettes/`. The old cassettes are replaced only if every test passed, so a failed run cannot leave you with a half-recorded set. Choose queries with short answers so the files stay small, and read them before committing. Request headers are never stored, and email addresses in a response are replaced with `redacted@example.invalid` when the cassette is written. If a test pins a value that changes upstream, such as a front-page id or a download count, assert it only in replay mode so `make record` keeps passing. [docs/adapter-contract.md](docs/adapter-contract.md) shows how.
 
 7. Check everything:
 
    ```sh
+   make adapters-md
    make test
    make fmt
    make lint
-   make adapters-md
    ```
 
-   `make test` replays the cassettes offline and also runs the catalog contract, which checks your `adapter.yaml`, your descriptions and that you have a test file and at least one cassette. `make fmt` fixes formatting. `make adapters-md` regenerates [ADAPTERS.md](ADAPTERS.md), which you commit with your change. Until you do, `make test` fails with `test_adapters_md_is_up_to_date`, and CI fails the same way. Do not edit ADAPTERS.md by hand.
+   `make adapters-md` regenerates [ADAPTERS.md](ADAPTERS.md), which you commit with your change. Run it first: until you do, `make test` fails with `test_adapters_md_is_up_to_date`, and CI fails the same way. Do not edit ADAPTERS.md by hand. `make test` replays the cassettes offline and also runs the catalog contract, which checks your `adapter.yaml`, your descriptions and that you have a test file and at least one cassette. `make fmt` fixes formatting.
+
+   If you open a pull request while others are adding adapters, ADAPTERS.md will often conflict when you merge or rebase, because every adapter adds rows to it. Resolve it the same way each time: keep either side of the conflict, run `make adapters-md`, then commit the result. The command rewrites the whole file from the adapters, so it does not matter which side you kept.
 
 8. Commit and open a pull request. Subjects follow conventional commits, for example `feat(adapters): add crossref adapter`. The pull request template has a short checklist.
 
@@ -122,12 +124,13 @@ By contributing you agree that your work is licensed under the [Apache License 2
 
 ## What happens after you open a pull request
 
-A maintainer replies within two days, usually with a review or a question. CI runs these checks, all offline and with no secrets:
+GitHub holds CI on a fork's first pull request until a maintainer approves the run, so if this is your first one, the checks can take a little while to appear. A maintainer approves that run and replies within two days, usually with a review or a question. Once CI runs, it checks these things, all offline and with no secrets:
 
 - `ruff check` and `ruff format --check`
 - ADAPTERS.md is up to date
 - `scripts/check_release.py` (version numbers agree across `pyproject.toml` and `server.json`)
 - every M3 test in replay mode, plus `scripts/check_feature_results.py`, which fails if an adapter's tests never drove the server
+- the Docker image builds and starts (`--version` and `--list-tools`). Docker is not needed on your machine for this, CI does it
 
 The same commands run locally as `make lint` and `make test`, so a green local run should mean a green CI run. If CI fails on something you cannot reproduce, say so in the pull request.
 

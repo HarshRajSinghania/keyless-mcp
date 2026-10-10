@@ -28,7 +28,7 @@ to replay mode, so it stays offline even if `KEYLESS_MCP_HTTP_MODE=live` is expo
 
 `test_tool_selection.py` is a table of plain-English prompts, at least one per adapter, for
 example "Are there known security vulnerabilities in version 2.4.1 of the PyPI package jinja2?".
-No prompt names a tool. The agent gets all 16 keyless tools and the test asserts, from the call M3
+No prompt names a tool. The agent gets every keyless tool (`make tools` lists them) and the test asserts, from the call M3
 recorded on the wire, that it called the right one (here `osv_query_package` with ecosystem PyPI,
 name `jinja2`, version `2.4.1`) and that the call succeeded. Look-alike tools that would be the
 wrong choice (`npm_get_package` for a PyPI question) are asserted not to be called.

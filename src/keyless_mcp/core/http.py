@@ -106,6 +106,8 @@ class HttpClient:
     ) -> cassette.RecordedResponse:
         """Perform (or replay) one request and return the response. Raises on HTTP errors."""
         url = cassette.canonical_url(url, dict(params) if params else None)
+        if self.config.mode is HttpMode.RECORD:
+            self._require_cassette_dir()  # fail before sending a live request we cannot save
         if self.config.mode is HttpMode.REPLAY:
             response = self._replay(adapter.name, method, url, json_body)
         else:
@@ -183,12 +185,17 @@ class AdapterHttp:
         return body if isinstance(body, str) else json.dumps(body)
 
     def _require_json(self, url: str, response: cassette.RecordedResponse) -> Any:
-        if isinstance(response.body, str):
+        body = response.body
+        if not isinstance(body, str):
+            return body
+        # Some APIs serve JSON as text/plain; accept it when the text really is JSON.
+        try:
+            return json.loads(body)
+        except ValueError:
             raise UpstreamError(
                 f"{self.name}: {url} did not return valid JSON "
-                f"(content-type {response.content_type or 'unknown'}): {_snippet(response.body)}"
-            )
-        return response.body
+                f"(content-type {response.content_type or 'unknown'}): {_snippet(body)}"
+            ) from None
 
 
 def _snippet(body: Any, limit: int = 200) -> str:

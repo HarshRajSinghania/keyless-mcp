@@ -150,7 +150,7 @@ and body. Request headers are never stored. Commit cassettes; keep them small by
 queries with short answers.
 
 ```sh
-make record ADAPTER=catfacts    # deletes that adapter's cassettes, re-runs its tests live, writes new ones
+make record ADAPTER=catfacts    # re-runs its tests live; swaps in new cassettes only if all pass
 git diff m3_tests/adapters/catfacts/cassettes
 ```
 

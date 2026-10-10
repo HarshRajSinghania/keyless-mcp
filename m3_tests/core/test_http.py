@@ -148,6 +148,40 @@ def test_invalid_json_becomes_a_readable_upstream_error() -> None:
         run(lambda: api.get_json(URL))
 
 
+def test_json_served_as_text_plain_is_still_parsed() -> None:
+    """Some APIs label JSON as text/plain; if the text is valid JSON it is accepted."""
+    api = client_with(
+        lambda r: httpx.Response(
+            200, text='{"answer": 42}', headers={"content-type": "text/plain; charset=utf-8"}
+        ),
+        HttpMode.LIVE,
+    ).for_adapter("demo", 600)
+    assert run(lambda: api.get_json(URL)) == {"answer": 42}
+
+
+def test_text_plain_that_is_not_json_is_still_an_error() -> None:
+    api = client_with(
+        lambda r: httpx.Response(200, text="plain words", headers={"content-type": "text/plain"}),
+        HttpMode.LIVE,
+    ).for_adapter("demo", 600)
+    with pytest.raises(UpstreamError, match="did not return valid JSON"):
+        run(lambda: api.get_json(URL))
+
+
+def test_record_mode_without_a_cassette_dir_fails_before_any_live_request() -> None:
+    """Recording must not hit the real API when the response could not be saved."""
+    calls = []
+
+    def live(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        return httpx.Response(200, json={})
+
+    api = client_with(live, HttpMode.RECORD).for_adapter("demo", 600)
+    with pytest.raises(UpstreamError, match="KEYLESS_MCP_CASSETTE_DIR"):
+        run(lambda: api.get_json(URL))
+    assert calls == []
+
+
 def test_get_text_returns_the_raw_body() -> None:
     api = client_with(
         lambda r: httpx.Response(200, text="<a/>", headers={"content-type": "application/xml"}),

@@ -30,7 +30,7 @@ def call_osv(connect, tmp_path):
     return result
 
 
-def test_upstream_500_is_an_error_result_with_status_and_url(connect, tmp_path) -> None:
+def test_upstream_503_is_an_error_result_with_status_and_url(connect, tmp_path) -> None:
     record(tmp_path, 503, "application/json", {"message": "backend unavailable"})
     result = call_osv(connect, tmp_path)
     assert result.is_error is True
@@ -55,3 +55,23 @@ def test_missing_cassette_fails_loudly_with_recording_instructions(connect, tmp_
     assert "GHSA-aaaa-bbbb-cccc" in text
     assert "KEYLESS_MCP_HTTP_MODE=record" in text
     assert "make record ADAPTER=osv" in text
+
+
+def test_unexpected_response_shape_is_an_error_result_naming_the_missing_field(
+    connect, tmp_path
+) -> None:
+    """A 200 body without the field the adapter reads (KeyError) must not crash the tool."""
+    record(tmp_path, 200, "application/json", {"unexpected": "shape"})
+    result = call_osv(connect, tmp_path)
+    assert result.is_error is True
+    text = result_text(result)
+    assert "osv: upstream response had an unexpected shape (missing 'id')" in text
+    assert "osv_get_vulnerability" in text
+
+
+def test_a_wrongly_typed_response_is_an_error_result_too(connect, tmp_path) -> None:
+    """A JSON list where an object was expected (AttributeError) is reported the same way."""
+    record(tmp_path, 200, "application/json", ["not", "an", "object"])
+    result = call_osv(connect, tmp_path)
+    assert result.is_error is True
+    assert "osv: upstream response had an unexpected shape (AttributeError" in result_text(result)

@@ -14,6 +14,9 @@ ADAPTER_TESTS = PROJECT_ROOT / "m3_tests" / "adapters"
 
 MODE_ENV = "KEYLESS_MCP_HTTP_MODE"
 CASSETTE_DIR_ENV = "KEYLESS_MCP_CASSETTE_DIR"
+# `make record` sets this to a temp directory so cassettes are recorded there and only swapped
+# into the repo when every test passed. Unset normally.
+RECORD_ROOT_ENV = "KEYLESS_MCP_RECORD_ROOT"
 
 
 def cassette_dir(adapter_name: str) -> Path:
@@ -33,8 +36,12 @@ def keyless_server(
     The HTTP mode comes from ``KEYLESS_MCP_HTTP_MODE`` and defaults to ``replay`` so tests are
     offline unless you ask otherwise (``make record`` sets ``record``, ``make test-live`` sets
     ``live``). Pass ``mode`` to force one, which is how ``live`` tests stay live under replay.
-    ``cassettes`` overrides the cassette directory (for tests that craft their own cassettes).
+    ``cassettes`` overrides the cassette directory (for tests that craft their own cassettes);
+    otherwise ``KEYLESS_MCP_RECORD_ROOT``, when set, redirects it to ``<root>/<adapter_name>``.
     """
+    record_root = os.environ.get(RECORD_ROOT_ENV)
+    if cassettes is None and record_root:
+        cassettes = Path(record_root) / adapter_name
     args = ["-m", "keyless_mcp"]
     if toolsets is not None:
         args += ["--toolsets", ",".join(toolsets)]

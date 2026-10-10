@@ -1,12 +1,13 @@
 """Adapter discovery, ``adapter.yaml`` validation and tool registration.
 
 An adapter is a subpackage of ``keyless_mcp.adapters`` that has an ``adapter.yaml`` and a
-``tools`` module exposing ``register(mcp, http)``. Packages starting with ``_`` (the template)
+``tools`` module exposing ``register(tools, http)``. Packages starting with ``_`` (the template)
 are skipped. See ``docs/adapter-contract.md``.
 """
 
 from __future__ import annotations
 
+import functools
 import importlib
 import inspect
 import pkgutil
@@ -22,7 +23,7 @@ from mcp.types import ToolAnnotations
 
 import keyless_mcp.adapters as adapters_pkg
 
-from .errors import AdapterError
+from .errors import AdapterError, UpstreamError
 from .http import HttpClient
 
 TOOLSETS = ("science", "dev", "geo", "news")
@@ -41,6 +42,8 @@ PUBLIC_READ_ONLY = ToolAnnotations(
     read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=True
 )
 _F = TypeVar("_F", bound=Callable[..., Any])
+# AttributeError covers ``None.get(...)`` / ``list.get(...)`` on a response of the wrong type.
+_SHAPE_ERRORS = (KeyError, TypeError, IndexError, AttributeError)
 
 
 @dataclass(frozen=True)
@@ -169,12 +172,56 @@ class ToolRegistry:
             if tool_name in self.names:
                 raise AdapterError(f"adapters/{self._adapter}: duplicate tool {tool_name!r}")
             self._mcp.add_tool(
-                fn, name=tool_name, title=title, description=description, annotations=annotations
+                self._guard(fn, tool_name),
+                name=tool_name,
+                title=title,
+                description=description,
+                annotations=annotations,
             )
             self.names.append(tool_name)
             return fn
 
         return decorator
+
+    def _guard(self, fn: _F, tool_name: str) -> Callable[..., Any]:
+        """Wrap a tool so a surprise in an upstream response becomes a readable error result.
+
+        Adapters index into parsed JSON (``data["items"][0]["name"]``). When the API changes shape
+        that raises ``KeyError``, ``TypeError``, ``IndexError`` or ``AttributeError``, which would
+        otherwise reach the agent as an opaque failure. The wrapper keeps the signature and
+        annotations, so the MCP input schema is unchanged.
+        """
+        adapter = self._adapter
+
+        def unexpected(exc: Exception) -> UpstreamError:
+            if isinstance(exc, KeyError):
+                detail = f"missing {exc.args[0]!r}" if exc.args else "missing key"
+            else:
+                detail = f"{type(exc).__name__}: {exc}"
+            return UpstreamError(
+                f"{adapter}: upstream response had an unexpected shape ({detail}) while running "
+                f"{tool_name}. The API may have changed; please report this."
+            )
+
+        if inspect.iscoroutinefunction(fn):
+
+            @functools.wraps(fn)
+            async def async_guarded(*args: Any, **kwargs: Any) -> Any:
+                try:
+                    return await fn(*args, **kwargs)
+                except _SHAPE_ERRORS as exc:
+                    raise unexpected(exc) from exc
+
+            return async_guarded
+
+        @functools.wraps(fn)
+        def guarded(*args: Any, **kwargs: Any) -> Any:
+            try:
+                return fn(*args, **kwargs)
+            except _SHAPE_ERRORS as exc:
+                raise unexpected(exc) from exc
+
+        return guarded
 
 
 def register_adapters(

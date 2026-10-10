@@ -26,8 +26,17 @@ test-live: ## Run the live smoke tests against the real APIs (needs network)
 record: ## Re-record an adapter's cassettes from the real API: make record ADAPTER=arxiv
 	@test -n "$(ADAPTER)" || { echo "usage: make record ADAPTER=<name>"; exit 1; }
 	@test -d m3_tests/adapters/$(ADAPTER) || { echo "no such adapter: $(ADAPTER)"; exit 1; }
-	rm -f m3_tests/adapters/$(ADAPTER)/cassettes/*.json
-	KEYLESS_MCP_HTTP_MODE=record $(M3) test --python $(PY) -- m3_tests/adapters/$(ADAPTER) -m "not live and not agent" -q
+	@# Record into a temp dir; the committed cassettes are replaced only if every test passed.
+	@tmp=$$(mktemp -d) && trap 'rm -rf "$$tmp"' EXIT && \
+	if KEYLESS_MCP_HTTP_MODE=record KEYLESS_MCP_RECORD_ROOT="$$tmp" $(M3) test --python $(PY) -- m3_tests/adapters/$(ADAPTER) -m "not live and not agent" -q; then \
+	  ls "$$tmp/$(ADAPTER)"/*.json >/dev/null 2>&1 || { echo "record: no requests were recorded; existing cassettes kept"; exit 1; }; \
+	  mkdir -p m3_tests/adapters/$(ADAPTER)/cassettes && \
+	  rm -f m3_tests/adapters/$(ADAPTER)/cassettes/*.json && \
+	  cp "$$tmp/$(ADAPTER)"/*.json m3_tests/adapters/$(ADAPTER)/cassettes/ && \
+	  echo "record: wrote $$(ls m3_tests/adapters/$(ADAPTER)/cassettes/*.json | wc -l | tr -d ' ') cassette(s) to m3_tests/adapters/$(ADAPTER)/cassettes"; \
+	else \
+	  echo "record: tests failed against the live API; existing cassettes were left untouched"; exit 1; \
+	fi
 
 new-adapter: ## Scaffold an adapter: make new-adapter NAME=open_meteo TOOLSET=geo
 	@test -n "$(NAME)" || { echo "usage: make new-adapter NAME=<name> [TOOLSET=science|dev|geo|news]"; exit 1; }

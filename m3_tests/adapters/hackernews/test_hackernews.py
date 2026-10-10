@@ -28,15 +28,19 @@ def test_top_stories_returns_ranked_stories_with_discussion_links(connect) -> No
     data = result.structured_content
     assert data["returned"] == len(data["stories"]) == 3
     assert [s["rank"] for s in data["stories"]] == [1, 2, 3]
+    # Exact values of the recorded cassette; a re-record changes the front page.
+    assert [s["id"] for s in data["stories"]] == [49991852, 50034081, 50035530]
+    assert data["stories"][1]["title"] == "Knuth reward check"
+    assert [s["type"] for s in data["stories"]] == ["story"] * 3
+    assert [s["score"] for s in data["stories"]] == [70, 89, 19]
+    assert [s["comments"] for s in data["stories"]] == [16, 32, 1]
     for story in data["stories"]:
         assert story["title"]
-        assert story["type"] in {"story", "job", "poll"}
         assert story["hn_url"] == f"https://news.ycombinator.com/item?id={story['id']}"
         assert isinstance(story["comments"], int) and story["comments"] >= 0
         assert story["time"].endswith("Z")
         assert story["url"] is None or story["url"].startswith("http")
-    ranked = [s for s in data["stories"] if s["type"] == "story"]
-    assert all(s["score"] > 0 and s["by"] for s in ranked)
+    assert [s["by"] for s in data["stories"]] == ["Michelangelo11", "Curiositry", "tosh"]
 
 
 def test_get_item_returns_the_documented_dropbox_story(connect) -> None:

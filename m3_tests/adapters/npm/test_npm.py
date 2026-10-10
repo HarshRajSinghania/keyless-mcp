@@ -48,7 +48,7 @@ def test_get_package_reports_license_author_and_repository_of_is_odd(connect) ->
     assert data["license"] == "MIT"
     assert data["author"] == "Jon Schlinkert"
     assert data["repository"] == "https://github.com/jonschlinkert/is-odd"
-    assert data["latest_version"].split(".")[0].isdigit()
+    assert data["latest_version"] == "3.0.1"  # from the recorded cassette
     assert data["deprecated"] is None
 
 

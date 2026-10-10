@@ -31,9 +31,10 @@ def test_get_package_returns_the_latest_release_of_six(connect) -> None:
     assert data["author"] == "Benjamin Peterson"
     assert data["project_urls"]["Homepage"] == "https://github.com/benjaminp/six"
     assert data["url"] == "https://pypi.org/project/six/"
-    assert data["release_count"] > 10
-    assert data["release_date"].startswith("20"), "an ISO timestamp of the first upload"
-    assert data["version"].count(".") >= 1
+    # Exact values of the recorded cassette (six 1.17.0, uploaded 2024-12-04, 29 releases).
+    assert data["version"] == "1.17.0"
+    assert data["release_count"] == 29
+    assert data["release_date"] == "2024-12-04T17:35:26.475808Z"
     assert data["yanked"] is False
 
 

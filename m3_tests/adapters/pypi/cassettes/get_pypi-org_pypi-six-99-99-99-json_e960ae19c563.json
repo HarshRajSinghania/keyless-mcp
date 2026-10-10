@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://pypi.org/pypi/six/99.99.99/json",
+    "body": null
+  },
+  "response": {
+    "status": 404,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "message": "Not Found"
+    }
+  }
+}

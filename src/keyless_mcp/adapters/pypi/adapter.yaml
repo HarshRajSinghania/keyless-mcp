@@ -1,0 +1,8 @@
+name: pypi
+title: PyPI
+description: Look up Python packages on PyPI, the Python Package Index; latest version, license, supported Python versions, links and per-release details.
+toolset: dev
+base_url: https://pypi.org/pypi
+docs_url: https://docs.pypi.org/api/json/
+rate_limit_per_minute: 60
+author: sineframe

@@ -1,0 +1,8 @@
+name: arxiv
+title: arXiv
+description: Search arXiv preprints and fetch paper metadata and abstracts (physics, maths, computer science, biology and more).
+toolset: science
+base_url: https://export.arxiv.org/api/query
+docs_url: https://info.arxiv.org/help/api/user-manual.html
+rate_limit_per_minute: 20
+author: sineframe

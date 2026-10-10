@@ -1,0 +1,9 @@
+# Adapter metadata. Every field is required. See docs/adapter-contract.md.
+name: ADAPTER_NAME                 # lowercase snake_case; must equal this directory's name
+title: ADAPTER_TITLE               # human-readable name of the API
+description: TODO one sentence an agent could read to decide whether this API is useful.
+toolset: ADAPTER_TOOLSET           # science | dev | geo | news
+base_url: https://api.example.com  # TODO the API's base URL
+docs_url: https://example.com/docs # TODO the API's documentation
+rate_limit_per_minute: 30          # TODO the API's documented limit (be conservative)
+author: your-github-handle

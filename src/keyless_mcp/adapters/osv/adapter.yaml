@@ -1,0 +1,8 @@
+name: osv
+title: OSV (Open Source Vulnerabilities)
+description: Look up known security vulnerabilities for open-source packages (PyPI, npm, Go, crates.io, Maven and more) and fetch advisory details.
+toolset: dev
+base_url: https://api.osv.dev/v1
+docs_url: https://google.github.io/osv.dev/api/
+rate_limit_per_minute: 120
+author: sineframe

@@ -24,6 +24,11 @@ def cassette_dir(adapter_name: str) -> Path:
     return ADAPTER_TESTS / adapter_name / "cassettes"
 
 
+def http_mode() -> str:
+    """The HTTP mode the servers started by tests run in: replay unless the env says otherwise."""
+    return os.environ.get(MODE_ENV, "replay")
+
+
 def keyless_server(
     adapter_name: str,
     toolsets: Iterable[str] | None = None,
@@ -54,7 +59,7 @@ def keyless_server(
         args=tuple(args),
         cwd=str(PROJECT_ROOT),
         environment={
-            MODE_ENV: mode or os.environ.get(MODE_ENV, "replay"),
+            MODE_ENV: mode or http_mode(),
             CASSETTE_DIR_ENV: str(cassettes or cassette_dir(adapter_name)),
         },
     )

@@ -9,7 +9,18 @@ from typing import Any
 
 import pytest
 
-from m3_tests._support.servers import keyless_server
+from m3_tests._support.servers import http_mode, keyless_server
+
+
+@pytest.fixture
+def replaying() -> bool:
+    """True when tests run against frozen cassettes (``make test``), False under ``make record``.
+
+    Pin exact upstream values (ids, scores, counts, dates) only when this is True. A re-record
+    changes live data, so in record mode assert the shape and invariants instead. See
+    docs/adapter-contract.md, "Frozen in replay, shape in live".
+    """
+    return http_mode() == "replay"
 
 
 @pytest.fixture

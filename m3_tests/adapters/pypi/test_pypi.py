@@ -18,7 +18,7 @@ def test_lists_both_pypi_tools_with_documented_inputs(connect) -> None:
     assert list(tools["pypi_get_release"].input_schema["required"]) == ["name", "version"]
 
 
-def test_get_package_returns_the_latest_release_of_six(connect) -> None:
+def test_get_package_returns_the_latest_release_of_six(connect, replaying) -> None:
     """six is a long-stable MIT-licensed package by Benjamin Peterson with a GitHub homepage."""
     with connect("pypi") as client:
         result = client.call_tool("pypi_get_package", {"name": "six"})
@@ -31,11 +31,16 @@ def test_get_package_returns_the_latest_release_of_six(connect) -> None:
     assert data["author"] == "Benjamin Peterson"
     assert data["project_urls"]["Homepage"] == "https://github.com/benjaminp/six"
     assert data["url"] == "https://pypi.org/project/six/"
-    # Exact values of the recorded cassette (six 1.17.0, uploaded 2024-12-04, 29 releases).
-    assert data["version"] == "1.17.0"
-    assert data["release_count"] == 29
-    assert data["release_date"] == "2024-12-04T17:35:26.475808Z"
-    assert data["yanked"] is False
+    assert data["version"].count(".") >= 1
+    assert data["release_count"] >= 29
+    assert data["release_date"].endswith("Z")
+    assert isinstance(data["yanked"], bool)
+    if replaying:
+        # Exact values of the recorded cassette (six 1.17.0, uploaded 2024-12-04, 29 releases).
+        assert data["version"] == "1.17.0"
+        assert data["release_count"] == 29
+        assert data["release_date"] == "2024-12-04T17:35:26.475808Z"
+        assert data["yanked"] is False
 
 
 def test_get_release_returns_a_specific_version_with_its_files(connect) -> None:

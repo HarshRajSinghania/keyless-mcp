@@ -39,7 +39,7 @@ def test_get_package_summarises_left_pad(connect) -> None:
     assert "readme" not in data and "versions" not in data, "the huge registry doc is trimmed"
 
 
-def test_get_package_reports_license_author_and_repository_of_is_odd(connect) -> None:
+def test_get_package_reports_license_author_and_repository_of_is_odd(connect, replaying) -> None:
     """is-odd is an MIT package by Jon Schlinkert; its git+https repository URL is cleaned up."""
     with connect("npm") as client:
         result = client.call_tool("npm_get_package", {"name": "is-odd"})
@@ -48,8 +48,10 @@ def test_get_package_reports_license_author_and_repository_of_is_odd(connect) ->
     assert data["license"] == "MIT"
     assert data["author"] == "Jon Schlinkert"
     assert data["repository"] == "https://github.com/jonschlinkert/is-odd"
-    assert data["latest_version"] == "3.0.1"  # from the recorded cassette
+    assert data["latest_version"].count(".") == 2
     assert data["deprecated"] is None
+    if replaying:
+        assert data["latest_version"] == "3.0.1"  # from the recorded cassette
 
 
 def test_get_package_accepts_a_scoped_name(connect) -> None:

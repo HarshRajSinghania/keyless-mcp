@@ -20,7 +20,7 @@ def test_lists_both_hackernews_tools_with_documented_inputs(connect) -> None:
     assert list(tools["hackernews_get_item"].input_schema["required"]) == ["item_id"]
 
 
-def test_top_stories_returns_ranked_stories_with_discussion_links(connect) -> None:
+def test_top_stories_returns_ranked_stories_with_discussion_links(connect, replaying) -> None:
     """Each story is ranked from 1, has a title, a score, an author and its HN page link."""
     with connect("hackernews") as client:
         result = client.call_tool("hackernews_top_stories", {"limit": 3})
@@ -28,19 +28,23 @@ def test_top_stories_returns_ranked_stories_with_discussion_links(connect) -> No
     data = result.structured_content
     assert data["returned"] == len(data["stories"]) == 3
     assert [s["rank"] for s in data["stories"]] == [1, 2, 3]
-    # Exact values of the recorded cassette; a re-record changes the front page.
-    assert [s["id"] for s in data["stories"]] == [49991852, 50034081, 50035530]
-    assert data["stories"][1]["title"] == "Knuth reward check"
-    assert [s["type"] for s in data["stories"]] == ["story"] * 3
-    assert [s["score"] for s in data["stories"]] == [70, 89, 19]
-    assert [s["comments"] for s in data["stories"]] == [16, 32, 1]
+    assert all(s["type"] in {"story", "job", "poll"} for s in data["stories"])
+    assert len({s["id"] for s in data["stories"]}) == 3
+    if replaying:
+        # Exact values of the recorded cassette; the live front page changes every minute.
+        assert [s["id"] for s in data["stories"]] == [49991852, 50034081, 50035530]
+        assert data["stories"][1]["title"] == "Knuth reward check"
+        assert [s["type"] for s in data["stories"]] == ["story"] * 3
+        assert [s["score"] for s in data["stories"]] == [70, 89, 19]
+        assert [s["comments"] for s in data["stories"]] == [16, 32, 1]
+        assert [s["by"] for s in data["stories"]] == ["Michelangelo11", "Curiositry", "tosh"]
     for story in data["stories"]:
         assert story["title"]
         assert story["hn_url"] == f"https://news.ycombinator.com/item?id={story['id']}"
         assert isinstance(story["comments"], int) and story["comments"] >= 0
         assert story["time"].endswith("Z")
         assert story["url"] is None or story["url"].startswith("http")
-    assert [s["by"] for s in data["stories"]] == ["Michelangelo11", "Curiositry", "tosh"]
+        assert story["by"]
 
 
 def test_get_item_returns_the_documented_dropbox_story(connect) -> None:
@@ -54,7 +58,7 @@ def test_get_item_returns_the_documented_dropbox_story(connect) -> None:
     assert item["by"] == "dhouston"
     assert item["title"] == "My YC app: Dropbox - Throw away your USB drive"
     assert item["url"] == "http://www.getdropbox.com/u/2/screencast.html"
-    assert item["comments"] == 71
+    assert item["comments"] >= 71
     assert item["time"] == "2007-04-04T19:16:40Z"
     assert item["reply_count"] > 10
     assert len(item["reply_ids"]) == 10

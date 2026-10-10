@@ -69,7 +69,7 @@ To try the server itself, `make tools` lists what it serves, and `make run` star
    make record ADAPTER=open_meteo
    ```
 
-   This runs your tests against the real API and saves each request and response as a JSON file in `m3_tests/adapters/<name>/cassettes/`. The old cassettes are replaced only if every test passed, so a failed run cannot leave you with a half-recorded set. Choose queries with short answers so the files stay small, and read them before committing. Request headers are never stored, and email addresses in a response are replaced with `redacted@example.invalid` when the cassette is written. If a test pins a value that changes upstream, such as a front-page id or a download count, assert it only in replay mode so `make record` keeps passing. [docs/adapter-contract.md](docs/adapter-contract.md) shows how.
+   This runs your tests against the real API and saves each request and response as a JSON file in `m3_tests/adapters/<name>/cassettes/`. The old cassettes are replaced only if every test passed, so a failed run cannot leave you with a half-recorded set. Choose queries with short answers so the files stay small, and read them before committing. Request headers are never stored, and email addresses in a response are replaced with `redacted@example.invalid` when the cassette is written (the generic `git@` SSH user in a repository URL is dropped instead). After saving, it replays the new cassettes once to check them. Pin only data that cannot change upstream; for anything that moves, such as a front-page id or a latest version, read the expected value from the cassette so `make record` keeps passing. [docs/adapter-contract.md](docs/adapter-contract.md) shows how.
 
 7. Check everything:
 

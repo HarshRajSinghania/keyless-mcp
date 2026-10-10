@@ -148,7 +148,8 @@ A cassette is one file per request, named `<method>_<host>_<path>_<hash>.json`, 
 of the method, URL (query parameters sorted) and body. It holds the request, status, content type
 and body. Request headers are never stored, and email addresses anywhere in a response are
 replaced with `redacted@example.invalid` when the cassette is written (registries like npm and
-PyPI list maintainer contacts). Do not assert on an email. Commit cassettes; keep them small by
+PyPI list maintainer contacts). The one exception is the generic `git@` SSH user in a repository URL, which is dropped
+(`git@github.com:o/r.git` becomes `ssh://github.com/o/r.git`) because it is not a person. Do not assert on an email. Commit cassettes; keep them small by
 choosing queries with short answers.
 
 ```sh
@@ -212,29 +213,37 @@ agent harness; neither runs in `make test`.
 
 ## Frozen in replay, shape in live
 
-`make test` replays cassettes, so a test may pin exact values from them: a story id, a score, a
-release date. `make record ADAPTER=<name>` runs the same tests against the live API, where those
-values have moved on, and swaps in the new cassettes only if every test passed. A test that pins
-live-changing data would fail every re-record.
+`make test` replays cassettes. `make record ADAPTER=<name>` runs the same tests against the live
+API, swaps in the new cassettes if they pass, then replays them once to check. Live data moves: a
+front page, a latest version, a release count. A test that pins such a value to a literal passes
+against the old cassette and fails against the fresh one.
 
-Take the `replaying` fixture and pin exact values only when it is true. Always assert the shape
-and the invariants that hold for any data:
+The rule: pin only data that cannot change upstream (a 2007 item, a country's ISO code, the
+metadata of one released version). Otherwise read the expected value from the cassette. The
+`replaying` fixture says which mode you are in, and `recorded()` returns what the cassette holds,
+loaded the way replay loads it:
 
 ```python
+from m3_tests._support.cassettes import recorded
+
+API = "https://hacker-news.firebaseio.com/v0"
+
+
 def test_top_stories(connect, replaying) -> None:
     with connect("hackernews") as client:
         result = client.call_tool("hackernews_top_stories", {"limit": 3})
     stories = result.structured_content["stories"]
     assert [s["rank"] for s in stories] == [1, 2, 3]  # holds for any data
-    assert all(s["hn_url"].endswith(str(s["id"])) for s in stories)
-    if replaying:  # frozen in the cassette, different live
-        assert [s["id"] for s in stories] == [49991852, 50034081, 50035530]
+    if replaying:  # live data differs, so compare with the cassette, never a copied literal
+        assert [s["id"] for s in stories] == recorded("hackernews", f"{API}/topstories.json")[:3]
+        for story in stories:
+            item = recorded("hackernews", f"{API}/item/{story['id']}.json")
+            assert story["score"] == item["score"]
 ```
 
-Values that never change (a 2007 item, a country's ISO code, a published paper's title) can be
-pinned in every mode. If a re-record changes the cassettes and `make test` still passes, keep
-them. If it fails because a pinned value moved, restore the old ones with `git checkout` or
-update the pinned values to match.
+Always assert the shape and the invariants that hold for any data, in every mode. If the replay
+check at the end of `make record` fails, a test pins a moved value: change it to read from the
+cassette, or restore the old cassettes with `git checkout`.
 
 ## Checklist
 
@@ -242,5 +251,5 @@ update the pinned values to match.
 - [ ] Tool names are `<adapter>_<verb>`; every tool and parameter has a description
 - [ ] No `httpx`/`requests` import; errors use `InvalidInput` / `UpstreamError`
 - [ ] Tests: catalog, happy path, error path, live smoke; cassettes recorded and committed
-- [ ] `make record ADAPTER=<name>` passes (live-changing values are pinned only when `replaying`)
+- [ ] `make record ADAPTER=<name>` passes, replay check included (values that move upstream are read from the cassette)
 - [ ] `make test` and `make lint` pass; `make tools` lists your tools

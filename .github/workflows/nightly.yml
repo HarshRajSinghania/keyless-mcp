@@ -111,7 +111,10 @@ jobs:
             echo "${FAILED_TESTS}"
             echo
             echo "Reproduce locally with \`make test-live\`, then re-record the affected adapter's"
-            echo "cassettes with \`make record ADAPTER=<name>\` and fix the adapter."
+            echo "cassettes with \`make record ADAPTER=<name>\` and fix the adapter. If the replay check"
+            echo "at the end of \`make record\` fails, a test pins a value that moved upstream: read the"
+            echo "expected value from the cassette instead (docs/adapter-contract.md, \"Frozen in replay,"
+            echo "shape in live\")."
           } > body.md
           number=$(gh issue list --label upstream-drift --state open --limit 1 --json number --jq '.[0].number // empty')
           if [ -n "${number}" ]; then

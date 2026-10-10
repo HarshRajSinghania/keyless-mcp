@@ -49,7 +49,7 @@ MCP Registry (`release.yml`, last job):
 - [ ] On a clean machine, run `uvx keyless-mcp --list-tools` and `docker run -i --rm ghcr.io/sineframe/keyless-mcp --version`. Nobody has built the Docker image yet, so this is its first real test.
 - [ ] Check that the PyPI page shows the README with working links and badges.
 - [ ] Flip the README quick start to the released form. Until the first release it leads with `uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp` in every client config. After PyPI has the package: make `uvx keyless-mcp` (and `"args": ["keyless-mcp"]`) the main command in the Claude Code, Claude Desktop, Cursor, VS Code, Codex and "Choosing toolsets" examples, delete the "not on PyPI yet" paragraph, and turn the "After the first release" section into a short "Run from GitHub or a clone" note. Remove the Docker note about the first release too.
-- [ ] Re-read the README sentence about toolsets that have no adapters yet (the lines that say four of seven toolsets have adapters, and the table row for `finance`, `reference` and `fun`). Update it as adapters land. ADAPTERS.md keeps its own "no adapters yet" line current automatically.
+- [ ] Re-read the README parts about toolsets without adapters: the table row for `finance`, `reference` and `fun`, the sentence after it that starts "Until an adapter lands", and the adapter list under "What it is". Update them as adapters land. ADAPTERS.md keeps its own "no adapters yet" line current automatically.
 - [ ] Look the server up in the MCP Registry and confirm the listing.
 
 ## 5. Issues

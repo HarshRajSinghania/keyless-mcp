@@ -37,7 +37,7 @@ All fields are required.
 | `name` | Lowercase snake_case. Must equal the directory name. Prefix of every tool name. |
 | `title` | Human-readable name of the API. |
 | `description` | One sentence on what the API offers. |
-| `toolset` | One of `science`, `dev`, `geo`, `news`. Users enable toolsets with `--toolsets a,b` or `KEYLESS_MCP_TOOLSETS`. |
+| `toolset` | One of `science`, `dev`, `geo`, `news`, `finance`, `reference`, `fun`. Users enable toolsets with `--toolsets a,b` or `KEYLESS_MCP_TOOLSETS`. |
 | `base_url` | The API's base URL (`http(s)://`). |
 | `docs_url` | Link to the API's documentation. |
 | `rate_limit_per_minute` | Positive integer. The server spaces requests to stay under it, so use the API's documented limit, rounded down. |

@@ -33,6 +33,9 @@ body:
         - dev
         - geo
         - news
+        - finance
+        - reference
+        - fun
         - Something else (explain below)
     validations:
       required: true

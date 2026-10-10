@@ -8,7 +8,7 @@ labels: ["help wanted", "hacktoberfest", "area:dx"]
 `--toolsets dev,geo` works, but a newcomer cannot see what the toolsets contain without reading the README. A typo gives this message and exits with status 1:
 
 ```text
-keyless-mcp: unknown toolset(s): nope. Valid toolsets: science, dev, geo, news
+keyless-mcp: unknown toolset(s): nope. Valid toolsets: science, dev, geo, news, finance, reference, fun
 ```
 
 The parsing is in `parse_toolsets` in `src/keyless_mcp/core/adapters.py`, and the flags are in `src/keyless_mcp/__main__.py`. A one-line description of each toolset already exists in `TOOLSET_BLURBS` in `scripts/gen_adapters_md.py`, but only the script can see it.

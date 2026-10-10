@@ -46,7 +46,7 @@ record: ## Re-record an adapter's cassettes from the real API: make record ADAPT
 	fi
 
 new-adapter: ## Scaffold an adapter: make new-adapter NAME=open_meteo TOOLSET=geo
-	@test -n "$(NAME)" || { echo "usage: make new-adapter NAME=<name> [TOOLSET=science|dev|geo|news]"; exit 1; }
+	@test -n "$(NAME)" || { echo "usage: make new-adapter NAME=<name> [TOOLSET=science|dev|geo|news|finance|reference|fun]"; exit 1; }
 	uv run python scripts/new_adapter.py $(NAME) --toolset $(TOOLSET)
 
 adapters-md: ## Regenerate ADAPTERS.md from the adapters and docs/results/agent-*-latest.json

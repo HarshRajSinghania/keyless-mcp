@@ -12,9 +12,9 @@
 # Each issue file starts with front matter holding a `title` and a `labels` list, both written
 # as JSON strings, followed by the Markdown body.
 #
-# Before running it for real, add the new toolsets listed in docs/launch/new-toolsets.md. The
-# script refuses to run while an issue refers to a toolset the code does not know, because a
-# contributor could not scaffold that adapter. Set SKIP_TOOLSET_CHECK=1 to override.
+# The script refuses to run while an issue refers to a toolset missing from TOOLSETS in
+# src/keyless_mcp/core/adapters.py, because a contributor could not scaffold that adapter.
+# Set SKIP_TOOLSET_CHECK=1 to override.
 set -euo pipefail
 
 REPO="${1:-sineframe/keyless-mcp}"
@@ -77,7 +77,7 @@ PY
 )"
   if [ -n "${missing}" ]; then
     echo "create_issues: these toolsets are used by the issues but are not in TOOLSETS yet: ${missing}" >&2
-    echo "Add them first (see docs/launch/new-toolsets.md), or set SKIP_TOOLSET_CHECK=1 to go ahead anyway." >&2
+    echo "Add them to TOOLSETS in src/keyless_mcp/core/adapters.py and scripts/new_adapter.py, or set SKIP_TOOLSET_CHECK=1 to go ahead anyway." >&2
     exit 1
   fi
 fi

@@ -9,7 +9,7 @@ import sys
 import anyio
 import pytest
 
-from keyless_mcp.core import AdapterSpec, discover_adapters, parse_toolsets
+from keyless_mcp.core import TOOLSETS, AdapterSpec, discover_adapters, parse_toolsets
 from keyless_mcp.server import build_server
 
 pytestmark = pytest.mark.m3(suite_name="core")
@@ -44,11 +44,22 @@ def test_default_registers_every_adapter() -> None:
     assert registered_tools(None) >= ARXIV_TOOLS | OSV_TOOLS
 
 
-@pytest.mark.parametrize("toolset", ["science", "dev", "geo", "news"])
+POPULATED = sorted({spec.toolset for spec in discover_adapters()})
+
+
+@pytest.mark.parametrize("toolset", POPULATED)
 def test_a_toolset_registers_exactly_its_own_adapters_tools(toolset) -> None:
     tools = registered_tools({toolset})
+    assert tools, f"{toolset} has adapters, so it must serve at least one tool"
     assert {toolset_of(t) for t in tools} <= {toolset}
     assert tools == {t for t in registered_tools(None) if toolset_of(t) == toolset}
+
+
+def test_every_known_toolset_is_valid_and_empty_ones_serve_no_tools() -> None:
+    """Toolsets with no adapter yet are accepted by ``--toolsets`` and register nothing."""
+    assert parse_toolsets(",".join(TOOLSETS)) == set(TOOLSETS)
+    for toolset in sorted(set(TOOLSETS) - set(POPULATED)):
+        assert registered_tools({toolset}) == set(), toolset
 
 
 def test_reference_adapters_sit_in_their_documented_toolsets() -> None:
@@ -66,7 +77,9 @@ def test_parse_toolsets_accepts_commas_case_and_blanks() -> None:
 
 
 def test_parse_toolsets_rejects_unknown_names_and_lists_valid_ones() -> None:
-    with pytest.raises(ValueError, match=r"unknown toolset\(s\): weather.*science, dev, geo, news"):
+    valid = "science, dev, geo, news, finance, reference, fun"
+    assert ", ".join(TOOLSETS) == valid  # the message below must list every toolset, in order
+    with pytest.raises(ValueError, match=rf"unknown toolset\(s\): weather.*{valid}"):
         parse_toolsets("science,weather")
 
 

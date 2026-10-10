@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "src" / "keyless_mcp" / "adapters" / "_template"
 TEST_TEMPLATE = ROOT / "scripts" / "templates" / "test_adapter.py.tmpl"
-TOOLSETS = ("science", "dev", "geo", "news")
+TOOLSETS = ("science", "dev", "geo", "news", "finance", "reference", "fun")
 NAME_RE = re.compile(r"^[a-z][a-z0-9]*(_[a-z0-9]+)*$")
 
 

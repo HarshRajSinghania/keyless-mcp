@@ -27,7 +27,7 @@ import keyless_mcp.adapters as adapters_pkg
 from .errors import AdapterError, UpstreamError
 from .http import HttpClient
 
-TOOLSETS = ("science", "dev", "geo", "news")
+TOOLSETS = ("science", "dev", "geo", "news", "finance", "reference", "fun")
 REQUIRED_FIELDS = (
     "name",
     "title",

@@ -8,6 +8,8 @@ Every adapter wraps a free public API that needs no key. Enable a group of them 
 
 **8 adapters, 16 tools.**
 
+Toolsets with no adapters yet (they are valid for `--toolsets` and serve no tools until the first adapter lands): `finance`, `reference`, `fun`.
+
 ## science
 
 Research and reference: papers, encyclopedias.

@@ -57,6 +57,9 @@ TOOLSET_BLURBS = {
     "dev": "Developer data: package registries and vulnerability advisories.",
     "geo": "Places and the world: weather, countries.",
     "news": "News and community feeds.",
+    "finance": "Money and economic data: exchange rates, public finance, inflation.",
+    "reference": "Looking things up: books, holidays, words, entities, web archives.",
+    "fun": "Games, trivia and entertainment.",
 }
 
 HEADER = """\
@@ -132,6 +135,13 @@ def render(adapters: list[LoadedAdapter], results: list[dict]) -> str:
 
     tool_count = sum(len(a.tool_names) for a in adapters)
     lines = [HEADER, f"**{len(adapters)} adapters, {tool_count} tools.**", ""]
+    waiting = [t for t in TOOLSETS if not any(a.spec.toolset == t for a in adapters)]
+    if waiting:
+        lines += [
+            "Toolsets with no adapters yet (they are valid for `--toolsets` and serve no tools "
+            f"until the first adapter lands): {', '.join(f'`{t}`' for t in waiting)}.",
+            "",
+        ]
     pass_headers = [f"Agent pass rate ({r['harness']})" for r in results] or ["Agent pass rate"]
 
     for toolset in TOOLSETS:

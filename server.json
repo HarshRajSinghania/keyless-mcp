@@ -21,7 +21,7 @@
       "environmentVariables": [
         {
           "name": "KEYLESS_MCP_TOOLSETS",
-          "description": "Comma-separated toolsets to serve: science, dev, geo, news. Leave empty to serve all of them.",
+          "description": "Comma-separated toolsets to serve: science, dev, geo, news, finance, reference, fun. Leave empty to serve all of them.",
           "isRequired": false
         }
       ]
@@ -35,7 +35,7 @@
       "environmentVariables": [
         {
           "name": "KEYLESS_MCP_TOOLSETS",
-          "description": "Comma-separated toolsets to serve: science, dev, geo, news. Leave empty to serve all of them.",
+          "description": "Comma-separated toolsets to serve: science, dev, geo, news, finance, reference, fun. Leave empty to serve all of them.",
           "isRequired": false
         }
       ]

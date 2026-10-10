@@ -1,0 +1,47 @@
+"""ADAPTER_TITLE adapter: catalog, happy paths and error paths, replayed from cassettes.
+
+Record the cassettes once against the real API with `make record ADAPTER=ADAPTER_NAME`, then
+`make test` replays them offline. Replace the TODOs with expectations taken from the API's
+documentation, not from whatever the server happens to return.
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from m3_tests._support.results import result_text
+
+pytestmark = pytest.mark.m3(suite_name="ADAPTER_NAME")
+
+
+def test_lists_the_ADAPTER_NAME_tools(connect) -> None:
+    """The catalog advertises ADAPTER_NAME_search with its required input."""
+    with connect("ADAPTER_NAME") as client:
+        tools = {t.name: t for t in client.list_all_tools() if t.name.startswith("ADAPTER_NAME_")}
+    assert set(tools) == {"ADAPTER_NAME_search"}
+    assert list(tools["ADAPTER_NAME_search"].input_schema["required"]) == ["query"]
+
+
+def test_search_returns_results(connect) -> None:
+    """TODO: a search for a well-known term returns the item the API documents for it."""
+    with connect("ADAPTER_NAME") as client:
+        result = client.call_tool("ADAPTER_NAME_search", {"query": "TODO", "limit": 3})
+    assert result.is_error is False, result_text(result)
+    data = result.structured_content
+    assert data["results"], "TODO: assert on a specific, documented result"
+
+
+def test_search_rejects_an_empty_query(connect) -> None:
+    """Invalid input is an is_error result with a helpful message (no network needed)."""
+    with connect("ADAPTER_NAME") as client:
+        result = client.call_tool("ADAPTER_NAME_search", {"query": "  "})
+    assert result.is_error is True
+    assert "must not be empty" in result_text(result)
+
+
+@pytest.mark.live
+def test_live_search_hits_the_real_api(connect) -> None:
+    """Smoke test against the real API (excluded from PR CI)."""
+    with connect("ADAPTER_NAME", mode="live") as client:
+        result = client.call_tool("ADAPTER_NAME_search", {"query": "TODO", "limit": 1})
+    assert result.is_error is False, result_text(result)

@@ -1,0 +1,62 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://geocoding-api.open-meteo.com/v1/search?count=2&format=json&language=en&name=Berlin",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "generationtime_ms": 0.5246401,
+      "results": [
+        {
+          "admin1": "State of Berlin",
+          "admin1_id": 2950157,
+          "admin3": "Berlin, Stadt",
+          "admin3_id": 6547383,
+          "admin4": "Berlin",
+          "admin4_id": 6547539,
+          "country": "Germany",
+          "country_code": "DE",
+          "country_id": 2921044,
+          "elevation": 74.0,
+          "feature_code": "PPLC",
+          "id": 2950159,
+          "latitude": 52.52437,
+          "longitude": 13.41053,
+          "name": "Berlin",
+          "population": 3426354,
+          "postcodes": [
+            "10967",
+            "13347"
+          ],
+          "timezone": "Europe/Berlin"
+        },
+        {
+          "admin1": "New Hampshire",
+          "admin1_id": 5090174,
+          "admin2": "Coos",
+          "admin2_id": 5084973,
+          "admin3": "City of Berlin",
+          "admin3_id": 5083340,
+          "country": "United States",
+          "country_code": "US",
+          "country_id": 6252001,
+          "elevation": 311.0,
+          "feature_code": "PPL",
+          "id": 5083330,
+          "latitude": 44.46867,
+          "longitude": -71.18508,
+          "name": "Berlin",
+          "population": 9367,
+          "postcodes": [
+            "03570"
+          ],
+          "timezone": "America/New_York"
+        }
+      ]
+    }
+  }
+}

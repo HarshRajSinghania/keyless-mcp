@@ -1,0 +1,45 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.open-meteo.com/v1/forecast?daily=temperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cweathercode&forecast_days=1&latitude=-33.87&longitude=151.21&timezone=auto",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "daily": {
+        "precipitation_sum": [
+          0.0
+        ],
+        "temperature_2m_max": [
+          24.1
+        ],
+        "temperature_2m_min": [
+          17.1
+        ],
+        "time": [
+          "2026-10-11"
+        ],
+        "weathercode": [
+          2
+        ]
+      },
+      "daily_units": {
+        "precipitation_sum": "mm",
+        "temperature_2m_max": "°C",
+        "temperature_2m_min": "°C",
+        "time": "iso8601",
+        "weathercode": "wmo code"
+      },
+      "elevation": 69.0,
+      "generationtime_ms": 0.16796588897705078,
+      "latitude": -33.848858,
+      "longitude": 151.19551,
+      "timezone": "Australia/Sydney",
+      "timezone_abbreviation": "GMT+11",
+      "utc_offset_seconds": 39600
+    }
+  }
+}

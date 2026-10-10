@@ -1,0 +1,8 @@
+name: open_meteo
+title: Open-Meteo
+description: Daily weather forecasts for any latitude and longitude, and place-name geocoding to find coordinates.
+toolset: geo
+base_url: https://api.open-meteo.com/v1
+docs_url: https://open-meteo.com/en/docs
+rate_limit_per_minute: 60
+author: sineframe

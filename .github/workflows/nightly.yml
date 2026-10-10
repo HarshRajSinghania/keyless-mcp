@@ -1,0 +1,237 @@
+name: Nightly
+
+# Two lanes that PR CI deliberately does not run, both on main only:
+#
+#   live   Calls the real public APIs and runs the `live` tests. When an upstream changes shape
+#          or goes down, the job fails and a single `upstream-drift` issue is opened or updated.
+#   agent  Real agents (Claude Code, Codex) pick tools from plain-English prompts, 3 trials each.
+#          This costs model tokens, so each matrix entry runs only when its secret is set and is
+#          skipped, with a notice, otherwise. Pass rates are uploaded as artifacts.
+#
+# Refreshing ADAPTERS.md with new pass rates is a maintainer step, not automatic (nothing here
+# commits to main): download the `agent-results-<harness>` artifact, copy the JSON into
+# docs/results/, then run `make adapters-md` and commit both.
+#
+# One-time setup for the agent lane: repository secrets ANTHROPIC_API_KEY (or
+# CLAUDE_CODE_OAUTH_TOKEN from `claude setup-token`) for Claude Code and OPENAI_API_KEY for
+# Codex. Optional repository variables AGENT_MODEL_CLAUDE and AGENT_MODEL_CODEX choose the models.
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+env:
+  UV_VERSION: "0.9.28"
+  # Agent CLIs are pinned so a nightly result changes only when the model or the repo does.
+  # Bump these on purpose, in a commit.
+  CLAUDE_CODE_VERSION: "2.1.296"
+  CODEX_VERSION: "0.162.1"
+
+jobs:
+  live:
+    name: Live API smoke tests
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      tests_failed: ${{ steps.tests.outcome == 'failure' }}
+      failed_tests: ${{ steps.failed.outputs.list }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version-file: .python-version
+      - name: Set up the project and M3
+        run: make setup
+      - name: Run the live tests
+        id: tests
+        env:
+          M3_TIMINGS: "1"
+        run: make test-live
+      - name: List the failing tests
+        id: failed
+        if: ${{ !cancelled() && steps.tests.outcome == 'failure' }}
+        run: |
+          {
+            echo "list<<EOF_FAILED"
+            .venv/bin/python - <<'PY'
+          import glob, json, os
+          reports = sorted(glob.glob(".m3/reports/*/feedback.json"), key=os.path.getmtime)
+          tests = json.load(open(reports[-1]))["tests"] if reports else []
+          bad = [t["node_id"] for t in tests if t["outcome"] not in ("passed", "skipped", "xfailed")]
+          print("\n".join(f"- {n}" for n in bad[:30]) or "- (no per-test report; see the run log)")
+          PY
+            echo "EOF_FAILED"
+          } >> "$GITHUB_OUTPUT"
+      - name: Upload M3 reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: m3-live-reports
+          path: .m3/reports/
+          if-no-files-found: warn
+          retention-days: 30
+
+  drift-issue:
+    name: Open or update the upstream-drift issue
+    needs: live
+    if: ${{ !cancelled() && needs.live.outputs.tests_failed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    # The only job that can write to issues. It checks out nothing and runs no repo code.
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILED_TESTS: ${{ needs.live.outputs.failed_tests }}
+        run: |
+          set -euo pipefail
+          gh label create upstream-drift --force \
+            --description "A live upstream API no longer matches the adapter" --color d93f0b
+          {
+            echo "The nightly live tests failed, so an upstream API probably changed or is down."
+            echo
+            echo "Run: ${RUN_URL}"
+            echo
+            echo "Failing tests:"
+            echo "${FAILED_TESTS}"
+            echo
+            echo "Reproduce locally with \`make test-live\`, then re-record the affected adapter's"
+            echo "cassettes with \`make record ADAPTER=<name>\` and fix the adapter."
+          } > body.md
+          number=$(gh issue list --label upstream-drift --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "${number}" ]; then
+            gh issue comment "${number}" --body-file body.md
+          else
+            gh issue create --label upstream-drift \
+              --title "Upstream API drift: nightly live tests failing" --body-file body.md
+          fi
+
+  agent:
+    name: Agent tool selection (${{ matrix.harness }})
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - harness: claude
+            model: ${{ vars.AGENT_MODEL_CLAUDE || 'sonnet' }}
+            credentials: ANTHROPIC_API_KEY CLAUDE_CODE_OAUTH_TOKEN
+          - harness: codex
+            model: ${{ vars.AGENT_MODEL_CODEX || 'gpt-6.1-sol' }}
+            credentials: OPENAI_API_KEY
+    steps:
+      - name: Is this harness configured?
+        id: configured
+        # Reads only whether a secret is non-empty, never its value.
+        env:
+          HARNESS: ${{ matrix.harness }}
+          HAVE_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+          HAVE_CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+          HAVE_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY != '' }}
+        run: |
+          case "${HARNESS}" in
+            claude) [ "${HAVE_ANTHROPIC_API_KEY}" = true ] || [ "${HAVE_CLAUDE_CODE_OAUTH_TOKEN}" = true ] && ok=true || ok=false ;;
+            codex) ok=${HAVE_OPENAI_API_KEY} ;;
+            *) ok=false ;;
+          esac
+          echo "run=${ok}" >> "$GITHUB_OUTPUT"
+          if [ "${ok}" != true ]; then
+            echo "::notice title=${HARNESS} agent lane skipped::No credential secret is set for ${HARNESS}; see the comment at the top of nightly.yml."
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.configured.outputs.run == 'true'
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        if: steps.configured.outputs.run == 'true'
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version-file: .python-version
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: steps.configured.outputs.run == 'true'
+        with:
+          node-version: "22"
+      - name: Set up the project and M3
+        if: steps.configured.outputs.run == 'true'
+        run: make setup
+      - name: Install the ${{ matrix.harness }} CLI
+        if: steps.configured.outputs.run == 'true'
+        env:
+          HARNESS: ${{ matrix.harness }}
+        run: |
+          set -euo pipefail
+          case "${HARNESS}" in
+            claude) npm install --global "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"; claude --version ;;
+            codex) npm install --global "@openai/codex@${CODEX_VERSION}"; codex --version ;;
+          esac
+      - name: Write .env from the secrets that are set
+        if: steps.configured.outputs.run == 'true'
+        # m3 test reads .env, so credentials never appear on a command line. Only this
+        # harness's own variables are written.
+        env:
+          CREDENTIALS: ${{ matrix.credentials }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          umask 077
+          : > .env
+          for name in ${CREDENTIALS}; do
+            if [ -n "${!name:-}" ]; then printf '%s=%s\n' "${name}" "${!name}" >> .env; fi
+          done
+          echo "env keys written: $(cut -d= -f1 .env | tr '\n' ' ')"
+      - name: Run the agent tests (3 trials per prompt)
+        id: run
+        if: steps.configured.outputs.run == 'true'
+        # Not masked: if every test skips (bad credential, missing CLI) M3 exits 1 and the job
+        # fails, which is right, because nothing was tested.
+        env:
+          HARNESS: ${{ matrix.harness }}
+          MODEL: ${{ matrix.model }}
+          M3_TIMINGS: "1"
+        run: |
+          set -euo pipefail
+          m3_args=""
+          if [ "${HARNESS}" = claude ] && grep -q '^CLAUDE_CODE_OAUTH_TOKEN=' .env && ! grep -q '^ANTHROPIC_API_KEY=' .env; then
+            m3_args="--credential-env claude:CLAUDE_CODE_OAUTH_TOKEN=CLAUDE_CODE_OAUTH_TOKEN"
+          fi
+          make agent HARNESS="${HARNESS}" MODEL="${MODEL}" TRIALS=3 M3_ARGS="${m3_args}"
+      - name: Write the pass-rate file from the M3 report
+        if: ${{ !cancelled() && steps.run.outcome != 'skipped' }}
+        env:
+          HARNESS: ${{ matrix.harness }}
+          MODEL: ${{ matrix.model }}
+        run: uv run --no-sync python scripts/agent_results.py --harness "${HARNESS}" --model "${MODEL}"
+      - name: Upload the pass-rate file
+        if: ${{ !cancelled() && steps.run.outcome != 'skipped' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: agent-results-${{ matrix.harness }}
+          path: docs/results/agent-${{ matrix.harness }}-latest.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Upload M3 reports
+        if: ${{ !cancelled() && steps.run.outcome != 'skipped' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: m3-agent-reports-${{ matrix.harness }}
+          path: .m3/reports/
+          if-no-files-found: warn
+          retention-days: 30

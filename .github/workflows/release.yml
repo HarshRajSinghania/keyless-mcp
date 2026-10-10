@@ -1,0 +1,185 @@
+name: Release
+
+# Runs when a version tag is pushed (`git tag v0.1.0 && git push origin v0.1.0`) and nowhere else.
+#
+#   verify          tag matches pyproject.toml and server.json, tag is on main, tests pass, build
+#   pypi            publish the wheel and sdist to PyPI (trusted publishing, no token)
+#   docker          build, smoke-test and push ghcr.io/sineframe/keyless-mcp:<version> and :latest
+#   mcp-registry    publish server.json to the MCP Registry (GitHub OIDC, no token)
+#
+# One-time setup the maintainers do outside this repo:
+#   * PyPI: add a trusted publisher for the project (owner sineframe, repository keyless-mcp,
+#     workflow release.yml, environment pypi). For the first release use a "pending publisher".
+#   * GitHub: create the `pypi` environment (add required reviewers if you want a manual gate)
+#     and make the ghcr.io package public after its first push.
+#   * README.md needs `<!-- mcp-name: io.github.sineframe/keyless-mcp -->` and pyproject.toml needs
+#     `readme = "README.md"`: the registry checks PyPI's description for that marker. The verify
+#     job fails before anything is published if either is missing.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: ghcr.io/sineframe/keyless-mcp
+  UV_VERSION: "0.9.28"
+  MCP_PUBLISHER_VERSION: "1.8.1"
+  # sha256 of mcp-publisher_linux_amd64.tar.gz in the registry's v1.8.1 release checksums.
+  MCP_PUBLISHER_SHA256: "a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc"
+
+jobs:
+  verify:
+    name: Verify and build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: The tag is on main
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor "${GITHUB_SHA}" origin/main \
+            || { echo "::error::Tag ${GITHUB_REF_NAME} is not on main. Release from main only."; exit 1; }
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version-file: .python-version
+      - name: Install the project
+        run: uv sync --locked
+      - name: Tag, pyproject.toml, server.json and README agree
+        run: uv run --no-sync python scripts/check_release.py --tag "${GITHUB_REF_NAME}"
+      - name: Lint
+        run: |
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+          uv run --no-sync python scripts/gen_adapters_md.py --check
+      - name: Set up the M3 CLI
+        run: |
+          set -euo pipefail
+          m3_version=$(uv run --locked --no-sync python -c 'from importlib.metadata import version; print(version("sf-m3"))')
+          uv tool install "sf-m3-cli==${m3_version}"
+          m3 setup --python .venv/bin/python
+      - name: Offline M3 tests
+        env:
+          KEYLESS_MCP_HTTP_MODE: replay
+        run: m3 ci test --python .venv/bin/python -n auto -- m3_tests -m "not live and not agent" -q
+      - name: Build the wheel and sdist
+        run: uv build
+      - name: The built wheel runs
+        run: |
+          set -euo pipefail
+          uvx --isolated --from dist/*.whl keyless-mcp --version
+          uvx --isolated --from dist/*.whl keyless-mcp --list-tools
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
+
+  pypi:
+    name: Publish to PyPI
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/project/keyless-mcp/
+    permissions:
+      id-token: write # trusted publishing
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+
+  docker:
+    name: Publish the container image
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Image tags and labels
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+      - name: Build the image for a smoke test
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          load: true
+          tags: keyless-mcp:smoke
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke-test the image
+        run: |
+          set -euo pipefail
+          docker run --rm keyless-mcp:smoke --version
+          docker run --rm keyless-mcp:smoke --list-tools
+          [ "$(docker run --rm --entrypoint id keyless-mcp:smoke -u)" != 0 ] \
+            || { echo "::error::image runs as root"; exit 1; }
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push the multi-arch image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          cache-from: type=gha
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  mcp-registry:
+    name: Publish to the MCP Registry
+    # The registry verifies the PyPI description and the image label, so both must be live.
+    needs: [pypi, docker]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      id-token: write # GitHub OIDC login to the registry
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Wait for the release to appear on PyPI
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          for attempt in $(seq 1 30); do
+            if curl -fsS "https://pypi.org/pypi/keyless-mcp/${version}/json" > /dev/null; then exit 0; fi
+            echo "keyless-mcp ${version} is not on PyPI yet (attempt ${attempt}/30)"; sleep 10
+          done
+          echo "::error::keyless-mcp ${version} never appeared on PyPI"; exit 1
+      - name: Install mcp-publisher
+        run: |
+          set -euo pipefail
+          file="mcp-publisher_linux_amd64.tar.gz"
+          curl -fsSL -o "${file}" "https://github.com/modelcontextprotocol/registry/releases/download/v${MCP_PUBLISHER_VERSION}/${file}"
+          echo "${MCP_PUBLISHER_SHA256}  ${file}" | sha256sum --check
+          tar xzf "${file}" mcp-publisher
+      - name: Log in with GitHub OIDC
+        run: ./mcp-publisher login github-oidc
+      - name: Publish server.json
+        run: ./mcp-publisher publish

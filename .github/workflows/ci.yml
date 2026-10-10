@@ -1,0 +1,94 @@
+name: CI
+
+# Offline checks on every pull request, including pull requests from forks. Nothing here uses a
+# secret and nothing calls a live API or a model: the M3 suite replays recorded cassettes.
+# (The live-API and real-agent lanes are in nightly.yml.)
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint and generated files
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.9.28"
+          python-version-file: .python-version
+      - name: Install the project
+        run: uv sync --locked
+      - name: Ruff check
+        run: uv run --no-sync ruff check .
+      - name: Ruff format
+        run: uv run --no-sync ruff format --check .
+      - name: ADAPTERS.md is up to date
+        # Fails when an adapter or a result file changed without `make adapters-md`.
+        run: uv run --no-sync python scripts/gen_adapters_md.py --check
+      - name: Release metadata is consistent
+        # pyproject.toml, server.json and the image tag must agree on one version.
+        run: uv run --no-sync python scripts/check_release.py
+
+  m3:
+    name: M3 tests (offline replay)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.9.28"
+          python-version-file: .python-version
+      - name: Install the project
+        run: uv sync --locked
+      - name: Set up and check the matching M3 CLI
+        # The CLI version must equal the installed sf-m3 SDK, so read it from the lock.
+        run: |
+          set -euo pipefail
+          m3_version=$(uv run --locked --no-sync python -c 'from importlib.metadata import version; print(version("sf-m3"))')
+          uv tool install "sf-m3-cli==${m3_version}"
+          m3 setup --python .venv/bin/python
+          m3 doctor --python .venv/bin/python
+      - name: Run the M3 tests
+        id: tests
+        env:
+          KEYLESS_MCP_HTTP_MODE: replay
+          M3_TIMINGS: "1"
+        run: |
+          set -euo pipefail
+          m3 ci test --python .venv/bin/python -n auto -- m3_tests -m "not live and not agent" -q
+      - name: Check every adapter was tested through M3
+        if: ${{ !cancelled() && steps.tests.outcome != 'skipped' }}
+        run: .venv/bin/python scripts/check_feature_results.py
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### Tested with [M3](https://github.com/sineframe/m3)"
+            echo
+            echo "Every keyless-mcp tool is exercised through an M3 MCP client against recorded"
+            echo "cassettes: no network, no API keys. Download the \`m3-reports\` artifact and open"
+            echo "it with \`m3 ui\` to see each tool call."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload M3 reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: m3-reports
+          path: .m3/reports/
+          if-no-files-found: warn
+          retention-days: 14

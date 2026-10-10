@@ -1,9 +1,9 @@
-"""Country tools.
+"""World Bank country tools: name and ISO-code lookups with the latest population.
 
-The REST Countries API (restcountries.com) now needs an API key, so this adapter reads the
-World Bank country and indicator APIs instead: keyless, official and stable. They provide name,
-ISO codes, capital, region, income group, coordinates and population. They do not provide
-currencies or languages, so those are not offered. The flag emoji is derived from the ISO code.
+The country and indicator APIs provide name, ISO codes, capital, region, income group,
+coordinates and population. They have no currencies or languages. The flag emoji is derived
+from the ISO code. The country list (about 200 KB) is fetched once per server process and
+reused by later name lookups.
 """
 
 import re
@@ -86,9 +86,9 @@ def _rows(data: Any) -> list[dict[str, Any]]:
     message = _message(data)
     if message is not None:
         raise UpstreamError(
-            f"rest_countries: the World Bank API answered: {message.get('value', 'unknown error')}"
+            f"world_bank: the World Bank API answered: {message.get('value', 'unknown error')}"
         )
-    raise UpstreamError("rest_countries: unexpected response shape from the World Bank API")
+    raise UpstreamError("world_bank: unexpected response shape from the World Bank API")
 
 
 def _is_country(row: dict[str, Any]) -> bool:
@@ -157,8 +157,17 @@ def find_countries(countries: list[dict[str, Any]], query: str) -> list[dict[str
 
 
 def register(tools: ToolRegistry, http: AdapterHttp) -> None:
+    countries_cache: list[list[dict[str, Any]]] = []  # holds the country list once fetched
+
+    async def all_countries() -> list[dict[str, Any]]:
+        """Every real country (aggregates removed); downloaded on first use, then reused."""
+        if not countries_cache:
+            data = await http.get_json(f"{API_URL}/country", {"format": "json", "per_page": 400})
+            countries_cache.append([row for row in _rows(data) if _is_country(row)])
+        return countries_cache[0]
+
     @tools.tool(title="Find countries by name")
-    async def rest_countries_get(
+    async def world_bank_country_search(
         name: Annotated[
             str,
             Field(
@@ -171,13 +180,11 @@ def register(tools: ToolRegistry, http: AdapterHttp) -> None:
         """Look up countries by name. Returns up to 3 best matches, each with official name,
         ISO codes, capital, region, income group, coordinates, latest population (with its
         year), flag emoji and a World Bank link. Does not include currencies or languages. Use
-        rest_countries_by_code when you already know the ISO code."""
+        world_bank_country_by_code when you already know the ISO code."""
         query = name.strip()
         if not query:
             raise InvalidInput("name must not be empty.")
-        data = await http.get_json(f"{API_URL}/country", {"format": "json", "per_page": 400})
-        listing = _rows(data)
-        matches = find_countries([row for row in listing if _is_country(row)], query)
+        matches = find_countries(await all_countries(), query)
         if not matches:
             raise InvalidInput(
                 f"No country matches {query!r}. Use the English name (for example 'Germany') or "
@@ -193,7 +200,7 @@ def register(tools: ToolRegistry, http: AdapterHttp) -> None:
         }
 
     @tools.tool(title="Get country by ISO code")
-    async def rest_countries_by_code(
+    async def world_bank_country_by_code(
         code: Annotated[
             str,
             Field(

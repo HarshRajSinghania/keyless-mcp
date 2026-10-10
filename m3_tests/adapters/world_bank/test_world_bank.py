@@ -1,30 +1,32 @@
-"""Country facts adapter: catalog, happy paths and error paths, replayed from cassettes."""
+"""World Bank adapter: catalog, happy paths and error paths, replayed from cassettes."""
 
 from __future__ import annotations
 
+import anyio
 import pytest
 
-from keyless_mcp.adapters.rest_countries.tools import flag_emoji
+from keyless_mcp.adapters.world_bank.tools import flag_emoji, register
+from keyless_mcp.core import ToolRegistry
 from m3_tests._support.results import result_text
 
-pytestmark = pytest.mark.m3(suite_name="rest_countries")
+pytestmark = pytest.mark.m3(suite_name="world_bank")
 
 JAPAN_FLAG = "\U0001f1ef\U0001f1f5"  # regional indicators J + P
 
 
 def test_lists_both_country_tools_with_documented_inputs(connect) -> None:
-    """The catalog has rest_countries_get(name) and rest_countries_by_code(code)."""
-    with connect("rest_countries") as client:
-        tools = {t.name: t for t in client.list_all_tools() if t.name.startswith("rest_countries_")}
-    assert set(tools) == {"rest_countries_get", "rest_countries_by_code"}
-    assert list(tools["rest_countries_get"].input_schema["required"]) == ["name"]
-    assert list(tools["rest_countries_by_code"].input_schema["required"]) == ["code"]
+    """The catalog has world_bank_country_search(name) and world_bank_country_by_code(code)."""
+    with connect("world_bank") as client:
+        tools = {t.name: t for t in client.list_all_tools() if t.name.startswith("world_bank_")}
+    assert set(tools) == {"world_bank_country_search", "world_bank_country_by_code"}
+    assert list(tools["world_bank_country_search"].input_schema["required"]) == ["name"]
+    assert list(tools["world_bank_country_by_code"].input_schema["required"]) == ["code"]
 
 
 def test_get_japan_returns_capital_region_population_and_flag(connect) -> None:
     """Japan: capital Tokyo, ISO JP/JPN, East Asia & Pacific, roughly 120 million people."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_get", {"name": "Japan"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_search", {"name": "Japan"})
     assert result.is_error is False, result_text(result)
     data = result.structured_content
     assert data["total_matches"] == data["returned"] == 1
@@ -44,8 +46,8 @@ def test_get_japan_returns_capital_region_population_and_flag(connect) -> None:
 
 def test_get_partial_name_returns_every_match_alphabetically(connect) -> None:
     """'korea' matches both North and South Korea, each with its own population."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_get", {"name": "korea"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_search", {"name": "korea"})
     assert result.is_error is False, result_text(result)
     data = result.structured_content
     assert data["total_matches"] == 2
@@ -58,8 +60,8 @@ def test_get_partial_name_returns_every_match_alphabetically(connect) -> None:
 
 def test_get_understands_everyday_names_that_differ_from_official_ones(connect) -> None:
     """'South Korea' is listed by the World Bank as 'Korea, Rep.'; the alias finds it."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_get", {"name": "South Korea"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_search", {"name": "South Korea"})
     assert result.is_error is False, result_text(result)
     data = result.structured_content
     assert data["total_matches"] == 1
@@ -69,8 +71,8 @@ def test_get_understands_everyday_names_that_differ_from_official_ones(connect) 
 
 def test_by_code_accepts_a_three_letter_code(connect) -> None:
     """DEU is Germany: capital Berlin, Europe & Central Asia, about 80 to 90 million people."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_by_code", {"code": "DEU"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_by_code", {"code": "DEU"})
     assert result.is_error is False, result_text(result)
     germany = result.structured_content
     assert germany["name"] == "Germany"
@@ -83,8 +85,8 @@ def test_by_code_accepts_a_three_letter_code(connect) -> None:
 
 def test_by_code_is_case_insensitive_and_accepts_two_letters(connect) -> None:
     """'jp' resolves to Japan."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_by_code", {"code": "jp"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_by_code", {"code": "jp"})
     assert result.is_error is False, result_text(result)
     assert result.structured_content["name"] == "Japan"
     assert result.structured_content["flag"] == JAPAN_FLAG
@@ -92,8 +94,8 @@ def test_by_code_is_case_insensitive_and_accepts_two_letters(connect) -> None:
 
 def test_get_reports_a_name_that_matches_nothing(connect) -> None:
     """An unknown country is an is_error result that suggests how to phrase the query."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_get", {"name": "Atlantis"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_search", {"name": "Atlantis"})
     assert result.is_error is True
     text = result_text(result)
     assert "No country matches 'Atlantis'" in text
@@ -102,16 +104,16 @@ def test_get_reports_a_name_that_matches_nothing(connect) -> None:
 
 def test_by_code_reports_an_unknown_code(connect) -> None:
     """The API answers an unknown code with a message; it becomes a readable is_error result."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_by_code", {"code": "ZZ"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_by_code", {"code": "ZZ"})
     assert result.is_error is True
     assert "No country has the ISO code 'ZZ'" in result_text(result)
 
 
 def test_by_code_rejects_world_bank_aggregates_such_as_the_world(connect) -> None:
     """WLD is a valid World Bank code but is not a country."""
-    with connect("rest_countries") as client:
-        result = client.call_tool("rest_countries_by_code", {"code": "WLD"})
+    with connect("world_bank") as client:
+        result = client.call_tool("world_bank_country_by_code", {"code": "WLD"})
     assert result.is_error is True
     assert "No country has the ISO code 'WLD'" in result_text(result)
 
@@ -119,15 +121,15 @@ def test_by_code_rejects_world_bank_aggregates_such_as_the_world(connect) -> Non
 @pytest.mark.parametrize(
     ("tool", "arguments", "message"),
     [
-        ("rest_countries_get", {"name": "  "}, "name must not be empty"),
-        ("rest_countries_by_code", {"code": "J"}, "not an ISO country code"),
-        ("rest_countries_by_code", {"code": "../x"}, "not an ISO country code"),
-        ("rest_countries_by_code", {"code": "JAPN"}, "not an ISO country code"),
+        ("world_bank_country_search", {"name": "  "}, "name must not be empty"),
+        ("world_bank_country_by_code", {"code": "J"}, "not an ISO country code"),
+        ("world_bank_country_by_code", {"code": "../x"}, "not an ISO country code"),
+        ("world_bank_country_by_code", {"code": "JAPN"}, "not an ISO country code"),
     ],
 )
 def test_invalid_input_is_rejected_before_any_request(connect, tool, arguments, message) -> None:
     """Bad arguments are is_error results with a fix-it message; no cassette is needed."""
-    with connect("rest_countries") as client:
+    with connect("world_bank") as client:
         result = client.call_tool(tool, arguments)
     assert result.is_error is True
     assert message in result_text(result)
@@ -141,10 +143,51 @@ def test_flag_emoji_is_built_from_regional_indicator_symbols() -> None:
     assert flag_emoji("1A") is None
 
 
+def test_the_country_list_is_downloaded_once_per_process() -> None:
+    """Repeated name lookups reuse the list; only the (small) population request repeats."""
+    row = {
+        "id": "JPN",
+        "iso2Code": "JP",
+        "name": "Japan",
+        "region": {"id": "EAS", "value": "East Asia & Pacific"},
+        "incomeLevel": {"value": "High income"},
+        "capitalCity": "Tokyo",
+        "latitude": "35.67",
+        "longitude": "139.77",
+    }
+    population = {"countryiso3code": "JPN", "date": "2024", "value": 123_000_000}
+    requests: list[str] = []
+
+    class StubHttp:
+        async def get_json(self, url, params=None):
+            requests.append(url)
+            return [{}, [population] if "indicator" in url else [row]]
+
+    class StubServer:
+        tools: dict = {}
+
+        def add_tool(self, fn, *, name, **_kwargs) -> None:
+            self.tools[name] = fn
+
+    server = StubServer()
+    register(ToolRegistry(server, "world_bank"), StubHttp())  # type: ignore[arg-type]
+    search = server.tools["world_bank_country_search"]
+
+    async def lookups() -> list[dict]:
+        return [await search(name="Japan"), await search(name="jp")]
+
+    first, second = anyio.run(lookups)
+    assert first["countries"][0]["population"] == 123_000_000
+    assert second["countries"][0]["population"] == 123_000_000
+    list_requests = [u for u in requests if u.endswith("/country")]
+    assert len(list_requests) == 1, requests
+    assert len(requests) == 3, "one list download plus one population request per lookup"
+
+
 @pytest.mark.live
 def test_live_by_code_hits_the_real_api(connect) -> None:
     """Smoke test against the real World Bank API (excluded from PR CI)."""
-    with connect("rest_countries", mode="live") as client:
-        result = client.call_tool("rest_countries_by_code", {"code": "DE"})
+    with connect("world_bank", mode="live") as client:
+        result = client.call_tool("world_bank_country_by_code", {"code": "DE"})
     assert result.is_error is False, result_text(result)
     assert result.structured_content["capital"] == "Berlin"

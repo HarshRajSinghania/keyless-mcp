@@ -36,7 +36,8 @@ testpaths = ["m3_tests"]
 timeout = 120
 markers = [
   "live: hits the real network (excluded from PR CI)",
-  "agent: drives an agent harness and needs model credentials (excluded from PR CI)",
+  "agent: drives a real agent harness and needs model access (excluded from PR CI)",
+  "agent_fixture: scripted ACP agent, no model or keys, runs offline (included in PR CI)",
 ]
 
 [tool.ruff]

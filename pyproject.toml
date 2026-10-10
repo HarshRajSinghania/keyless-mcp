@@ -4,6 +4,18 @@ version = "0.1.0"
 description = "One MCP server wrapping free, no-auth public APIs, grouped into toolsets and tested with M3."
 readme = "README.md"
 license = "Apache-2.0"
+authors = [{ name = "SineFrame" }]
+keywords = ["mcp", "model-context-protocol", "mcp-server", "public-apis", "agents"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
 requires-python = ">=3.11"
 dependencies = [
   "mcp>=2.3,<3",
@@ -12,6 +24,12 @@ dependencies = [
   "pydantic>=2",
   "anyio>=4",
 ]
+
+[project.urls]
+Homepage = "https://github.com/sineframe/keyless-mcp"
+Repository = "https://github.com/sineframe/keyless-mcp"
+Issues = "https://github.com/sineframe/keyless-mcp/issues"
+Changelog = "https://github.com/sineframe/keyless-mcp/releases"
 
 [project.scripts]
 keyless-mcp = "keyless_mcp.__main__:main"

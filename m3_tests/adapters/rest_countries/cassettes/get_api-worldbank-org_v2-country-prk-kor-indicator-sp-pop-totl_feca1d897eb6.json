@@ -1,0 +1,54 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.worldbank.org/v2/country/PRK;KOR/indicator/SP.POP.TOTL?format=json&mrnev=1&per_page=2",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": [
+      {
+        "lastupdated": "2026-10-08",
+        "page": 1,
+        "pages": 1,
+        "per_page": 2,
+        "sourceid": null,
+        "total": 2
+      },
+      [
+        {
+          "country": {
+            "id": "KR",
+            "value": "Korea, Rep."
+          },
+          "countryiso3code": "KOR",
+          "date": "2025",
+          "decimal": 0,
+          "indicator": {
+            "id": "SP.POP.TOTL",
+            "value": "Population, total"
+          },
+          "obs_status": "",
+          "value": 51684564
+        },
+        {
+          "country": {
+            "id": "KP",
+            "value": "Korea, Dem. People's Rep."
+          },
+          "countryiso3code": "PRK",
+          "date": "2025",
+          "decimal": 0,
+          "indicator": {
+            "id": "SP.POP.TOTL",
+            "value": "Population, total"
+          },
+          "obs_status": "",
+          "value": 26571036
+        }
+      ]
+    ]
+  }
+}

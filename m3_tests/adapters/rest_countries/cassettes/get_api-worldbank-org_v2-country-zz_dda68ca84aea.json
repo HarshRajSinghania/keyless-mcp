@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.worldbank.org/v2/country/ZZ?format=json",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": [
+      {
+        "message": [
+          {
+            "id": "120",
+            "key": "Invalid value",
+            "value": "The provided parameter value is not valid"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.worldbank.org/v2/country/WLD?format=json",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": [
+      {
+        "page": 1,
+        "pages": 1,
+        "per_page": "50",
+        "total": 1
+      },
+      [
+        {
+          "adminregion": {
+            "id": "",
+            "iso2code": "",
+            "value": ""
+          },
+          "capitalCity": "",
+          "id": "WLD",
+          "incomeLevel": {
+            "id": "NA",
+            "iso2code": "NA",
+            "value": "Aggregates"
+          },
+          "iso2Code": "1W",
+          "latitude": "",
+          "lendingType": {
+            "id": "",
+            "iso2code": "",
+            "value": "Aggregates"
+          },
+          "longitude": "",
+          "name": "World",
+          "region": {
+            "id": "NA",
+            "iso2code": "NA",
+            "value": "Aggregates"
+          }
+        }
+      ]
+    ]
+  }
+}

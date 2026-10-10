@@ -1,0 +1,8 @@
+name: rest_countries
+title: Country facts
+description: Look up countries by name or ISO code for capital, region, income level, coordinates, latest population and flag emoji (World Bank data, because the REST Countries API now requires a key).
+toolset: geo
+base_url: https://api.worldbank.org/v2
+docs_url: https://datahelpdesk.worldbank.org/knowledgebase/articles/898590-country-api-queries
+rate_limit_per_minute: 60
+author: sineframe

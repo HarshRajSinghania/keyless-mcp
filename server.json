@@ -1,0 +1,44 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sineframe/keyless-mcp",
+  "title": "keyless-mcp",
+  "description": "Free public APIs as MCP tools, no API keys needed: arXiv, PyPI, npm, OSV, weather and more.",
+  "repository": {
+    "url": "https://github.com/sineframe/keyless-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/sineframe/keyless-mcp",
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "keyless-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "KEYLESS_MCP_TOOLSETS",
+          "description": "Comma-separated toolsets to serve: science, dev, geo, news. Leave empty to serve all of them.",
+          "isRequired": false
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/sineframe/keyless-mcp:0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "KEYLESS_MCP_TOOLSETS",
+          "description": "Comma-separated toolsets to serve: science, dev, geo, news. Leave empty to serve all of them.",
+          "isRequired": false
+        }
+      ]
+    }
+  ]
+}

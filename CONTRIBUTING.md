@@ -1,6 +1,6 @@
 # Contributing to keyless-mcp
 
-Thanks for wanting to help. The most useful contribution is a new adapter: a small wrapper around a free public API that needs no key. You do not need to know MCP internals. The scaffold writes most of the boilerplate, and the tests tell you what is missing.
+The most useful contribution is a new adapter: a small wrapper around a free public API that needs no key. You do not need to know MCP internals. The scaffold writes most of the boilerplate, and the tests tell you what is missing.
 
 If something else is on your mind, such as a bug, a docs fix or an idea for the core, open an issue or start a [discussion](https://github.com/sineframe/keyless-mcp/discussions). Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
@@ -24,7 +24,7 @@ make setup
 make test
 ```
 
-`make setup` creates `.venv`, installs the locked dependencies, and sets up and checks the M3 test tooling. `make test` runs the whole suite offline against recorded responses. It needs no network and no API keys, and takes about 35 seconds. A green run ends with a line like `195 passed`.
+`make setup` creates `.venv`, installs the locked dependencies, and sets up and checks the M3 test tooling. `make test` runs the whole suite offline against recorded responses. It needs no network and no API keys, and takes about 35 seconds. A green run ends with a line like `196 passed`.
 
 Run `make` on its own to list every command:
 
@@ -49,7 +49,7 @@ To try the server itself, `make tools` lists what it serves, and `make run` star
 
 1. Pick an API. Take one from the [good first issue](https://github.com/sineframe/keyless-mcp/labels/good%20first%20issue) list, or propose your own with the "New adapter" issue form. Comment on the issue to claim it, and link the issue from your pull request.
 
-2. Scaffold it. The name is lowercase snake_case, and the toolset is the one your issue names (`science`, `dev`, `geo` or `news` today):
+2. Scaffold it. The name is lowercase snake_case, and the toolset is the one your issue names (`science`, `dev`, `geo`, `news`, `finance`, `reference` or `fun`):
 
    ```sh
    make new-adapter NAME=open_meteo TOOLSET=geo

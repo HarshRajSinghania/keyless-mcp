@@ -14,7 +14,7 @@ One MCP server that gives your agent 16 tools over free public APIs: arXiv, Wiki
 
 Most MCP servers need a token before they do anything. Plenty of useful data sits behind public APIs that need none, and keyless-mcp wraps those in one server so you add it once and your agent can look things up right away.
 
-It currently has 8 adapters and 16 tools in 4 toolsets:
+It currently has 8 adapters and 16 tools, grouped into toolsets so you can switch groups on or off. Four of the seven toolsets have adapters today:
 
 - science: `arxiv`, `wikipedia`
 - dev: `npm`, `osv`, `pypi`
@@ -48,27 +48,18 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-Then check that the server starts and see its tools:
+keyless-mcp is not on PyPI yet, so for now every client below starts it straight from GitHub. The first start downloads and builds the package, which takes a few seconds, and later starts reuse the cache. Check that it works first:
 
 ```sh
-uvx keyless-mcp --list-tools
+uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp --list-tools
 ```
 
-That prints a table of every tool with its toolset and a one-line description.
-
-keyless-mcp has not been published to PyPI yet, so `uvx keyless-mcp` starts working with the first release. Until then, swap that command for one of these:
-
-| Where it runs from | Command |
-|---|---|
-| GitHub, no clone | `uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp` |
-| A local clone | `uv run --directory /path/to/keyless-mcp keyless-mcp` |
-
-Every client below takes the same command, so the examples use `uvx keyless-mcp`.
+That prints a table of every tool with its toolset and a one-line description. Working from a clone of the repository instead? Use `uv run --directory /path/to/keyless-mcp keyless-mcp` in place of the `uvx --from ...` part.
 
 ### Claude Code
 
 ```sh
-claude mcp add keyless -- uvx keyless-mcp
+claude mcp add keyless -- uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp
 ```
 
 The `--` matters. Everything after it is the server command, so flags such as `--toolsets` reach keyless-mcp and not `claude`. Add `--scope user` before the name to have it in every project, or `--scope project` to write it to a `.mcp.json` your team can commit. Run `claude mcp list` to check it, or type `/mcp` inside Claude Code.
@@ -82,7 +73,7 @@ Open Settings, then Developer, then Edit Config. That opens `claude_desktop_conf
   "mcpServers": {
     "keyless": {
       "command": "uvx",
-      "args": ["keyless-mcp"]
+      "args": ["--from", "git+https://github.com/sineframe/keyless-mcp", "keyless-mcp"]
     }
   }
 }
@@ -100,7 +91,7 @@ Put this in `.cursor/mcp.json` for one project, or `~/.cursor/mcp.json` for all 
     "keyless": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["keyless-mcp"]
+      "args": ["--from", "git+https://github.com/sineframe/keyless-mcp", "keyless-mcp"]
     }
   }
 }
@@ -116,7 +107,7 @@ Create `.vscode/mcp.json` in your workspace. VS Code uses the key `servers` here
     "keyless": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["keyless-mcp"]
+      "args": ["--from", "git+https://github.com/sineframe/keyless-mcp", "keyless-mcp"]
     }
   }
 }
@@ -125,13 +116,13 @@ Create `.vscode/mcp.json` in your workspace. VS Code uses the key `servers` here
 To add it to your user profile instead, run the command palette entry "MCP: Open User Configuration" and paste the same block, or use the command line:
 
 ```sh
-code --add-mcp '{"name":"keyless","command":"uvx","args":["keyless-mcp"]}'
+code --add-mcp '{"name":"keyless","command":"uvx","args":["--from","git+https://github.com/sineframe/keyless-mcp","keyless-mcp"]}'
 ```
 
 ### Codex
 
 ```sh
-codex mcp add keyless -- uvx keyless-mcp
+codex mcp add keyless -- uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp
 ```
 
 That writes this to `~/.codex/config.toml`, which you can also edit by hand:
@@ -139,8 +130,20 @@ That writes this to `~/.codex/config.toml`, which you can also edit by hand:
 ```toml
 [mcp_servers.keyless]
 command = "uvx"
-args = ["keyless-mcp"]
+args = ["--from", "git+https://github.com/sineframe/keyless-mcp", "keyless-mcp"]
 ```
+
+### After the first release
+
+Once keyless-mcp is on PyPI, drop the `--from git+...` part and the commands get shorter:
+
+```sh
+uvx keyless-mcp --list-tools
+claude mcp add keyless -- uvx keyless-mcp
+codex mcp add keyless -- uvx keyless-mcp
+```
+
+In the JSON and TOML files, use `"args": ["keyless-mcp"]` (Cursor, VS Code, Claude Desktop) or `args = ["keyless-mcp"]` (Codex). For VS Code's command line, use `code --add-mcp '{"name":"keyless","command":"uvx","args":["keyless-mcp"]}'`.
 
 ### Docker
 
@@ -152,31 +155,31 @@ The image is published to `ghcr.io` when a release is tagged, so this works afte
 
 ### Streamable HTTP
 
-For clients that connect by URL instead of launching a process:
+For clients that connect by URL instead of launching a process, start the server with the HTTP transport. From a clone, that is:
 
 ```sh
-uvx keyless-mcp --transport http --port 8000
+uv run keyless-mcp --transport http --port 8000
 ```
 
 The endpoint is `http://127.0.0.1:8000/mcp`. It binds to localhost by default. Inside a container, add `--host 0.0.0.0` and publish the port.
 
 ## Choosing toolsets
 
-By default the server offers every tool. Fewer tools means less for the agent to weigh, so pick the toolsets you need with a flag or an environment variable:
+The server has seven toolsets and offers every tool by default. Fewer tools means less for the agent to weigh, so pick the ones you need with a flag or an environment variable:
 
 ```sh
-uvx keyless-mcp --toolsets dev,geo
-KEYLESS_MCP_TOOLSETS=dev,geo uvx keyless-mcp
+keyless-mcp --toolsets dev,geo
+KEYLESS_MCP_TOOLSETS=dev,geo keyless-mcp
 ```
 
-If both are set, the flag wins. In a client, add the flag after the command:
+If both are set, the flag wins. In a client, add the flag after the server command. For example:
 
 ```sh
-claude mcp add keyless -- uvx keyless-mcp --toolsets dev,geo
+claude mcp add keyless -- uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp --toolsets dev,geo
 ```
 
 ```json
-{ "command": "uvx", "args": ["keyless-mcp", "--toolsets", "dev,geo"] }
+{ "command": "uvx", "args": ["--from", "git+https://github.com/sineframe/keyless-mcp", "keyless-mcp", "--toolsets", "dev,geo"] }
 ```
 
 | Toolset | What is in it |
@@ -185,8 +188,9 @@ claude mcp add keyless -- uvx keyless-mcp --toolsets dev,geo
 | `dev` | npm and PyPI package lookups, OSV vulnerability search |
 | `geo` | Open-Meteo forecasts and geocoding, World Bank country data |
 | `news` | Hacker News top stories and items |
+| `finance`, `reference`, `fun` | No adapters yet. The names are reserved and the [open issues](https://github.com/sineframe/keyless-mcp/labels/good%20first%20issue) add the first ones. |
 
-An unknown name stops the server with a message listing the valid ones. Add `--list-tools` to any command to see what would be served.
+Until an adapter lands in one of those last three, selecting only that toolset serves no tools. An unknown name stops the server with a message listing the valid ones. Add `--list-tools` to any command to see what would be served.
 
 ## Tools
 
@@ -207,7 +211,7 @@ An unknown name stops the server with a message listing the valid ones. Add `--l
 
 Every tool is tested with [M3](https://github.com/sineframe/m3), a testing tool for MCP servers and agents. The tests start the real server over stdio, call each tool through an MCP client, and check the results.
 
-- On every pull request, 195 tests run offline. The server replays recorded HTTP responses (cassettes), so CI needs no network and no secrets, and a fork's pull request runs the same checks as a maintainer's.
+- On every pull request, 196 tests run offline. The server replays recorded HTTP responses (cassettes), so CI needs no network and no secrets, and a fork's pull request runs the same checks as a maintainer's.
 - Every night, a live lane calls the real APIs. If an upstream changes shape or goes down, the job opens an `upstream-drift` issue.
 - Every night, an agent lane gives Claude Code and Codex plain-English questions that never name a tool, such as "Are there known security vulnerabilities in version 2.4.1 of the PyPI package jinja2?". It checks whether the agent picked the right tool and made a successful call, over 3 trials per prompt. This lane costs model tokens, so it runs only where the maintainers have set credentials.
 
@@ -264,7 +268,7 @@ Often it is the upstream: an unknown id returns a 404, and a busy API returns a 
 
 ## Contributors
 
-Thanks to everyone who has added an adapter or fixed a bug. This list follows the [all-contributors](https://allcontributors.org) specification and is empty until the first contribution lands. To be added, comment `@all-contributors please add @your-handle for code` on your merged pull request.
+No one has contributed yet, so this list is empty. It follows the [all-contributors](https://allcontributors.org) specification. To be added after your first merged pull request, comment `@all-contributors please add @your-handle for code` on it.
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->

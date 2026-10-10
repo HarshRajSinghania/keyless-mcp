@@ -1,6 +1,6 @@
 # DEV post draft
 
-Draft for the DEV Open-Source AI Challenge entries (Week 3 starts Oct 19, Week 4 starts Oct 26). The prompts are published when each week opens, so read the prompt first and adjust the opening and the "why it fits" paragraph. Lines in square brackets are for you to fill in with your own words or to delete. Nothing here is posted anywhere.
+Draft for the DEV Open-Source AI Challenge entries (Week 3 starts Oct 19, Week 4 starts Oct 26). The prompts are published when each week opens, so read the prompt first and adjust the opening and the "why it fits" paragraph. Lines in square brackets are for you to fill in with your own words or to delete. Before you post, re-run the jinja2 call quoted in "What I built" (`osv_query_package` with ecosystem `PyPI`, name `jinja2`, version `2.4.1`) and update the advisory count and ids to whatever OSV returns that day. The figures in this draft are from 2026-10-11. Nothing here is posted anywhere.
 
 Suggested title: keyless-mcp: one MCP server for public APIs that need no key
 
@@ -32,7 +32,7 @@ You can also turn on only the toolsets you want. `--toolsets dev,geo` serves the
 
 I tested every tool with [M3](https://github.com/sineframe/m3), a testing tool for MCP servers and agents. There are two layers.
 
-The first runs on every pull request and needs no network. M3 starts the real server over stdio, calls each tool through an MCP client, and the server answers from recorded HTTP responses. That is 195 tests, and a pull request from a fork runs them too, with no secrets involved.
+The first runs on every pull request and needs no network. M3 starts the real server over stdio, calls each tool through an MCP client, and the server answers from recorded HTTP responses. That is 196 tests, and a pull request from a fork runs them too, with no secrets involved.
 
 The second layer asks a real agent. Each prompt is a plain question that never names a tool, such as "Are there known security vulnerabilities in version 2.4.1 of the PyPI package jinja2?". The test checks which tool the agent called and whether the call succeeded. In the latest run, Codex picked the right tool on 10 of 10 prompts. That was one trial per prompt, on one day, with one model, so I treat it as a smoke check and not as a measurement. The nightly job repeats it with three trials. [Add those numbers if you have a few runs by the time you post.]
 

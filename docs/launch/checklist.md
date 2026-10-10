@@ -6,7 +6,7 @@ repeated here so you do not have to hunt for them.
 
 ## 1. Before the first push
 
-- [ ] Add the `finance`, `reference` and `fun` toolsets, or move those adapters elsewhere. See [new-toolsets.md](new-toolsets.md). Then `make test`, `make lint` and `uv run python scripts/gen_adapters_md.py --check` should still pass.
+- [ ] The `finance`, `reference` and `fun` toolsets are already in the code (they have no adapters yet, so ADAPTERS.md lists them as waiting). Run `make test`, `make lint` and `uv run python scripts/gen_adapters_md.py --check` once more before you push.
 - [ ] Read `README.md` once more on GitHub's renderer after the push. Its links are absolute and only work once the repository exists at `github.com/sineframe/keyless-mcp`.
 - [ ] TODO (optional): record a short screen capture of an agent using a tool. The README uses a text transcript instead of a GIF, so nothing links to `docs/demo.gif` yet. If you record one, add it to the README and commit it.
 - [ ] Check that no file contains a key, a token or a personal path: `git grep -nE "(sk-|ghp_|AKIA)"` should print nothing.
@@ -48,7 +48,8 @@ MCP Registry (`release.yml`, last job):
 - [ ] Watch the jobs in order: verify, pypi, docker, mcp-registry.
 - [ ] On a clean machine, run `uvx keyless-mcp --list-tools` and `docker run -i --rm ghcr.io/sineframe/keyless-mcp --version`. Nobody has built the Docker image yet, so this is its first real test.
 - [ ] Check that the PyPI page shows the README with working links and badges.
-- [ ] Edit the README quick start: delete the paragraph that says the package is not on PyPI yet, and the table under it. Remove the Docker note about the first release too.
+- [ ] Flip the README quick start to the released form. Until the first release it leads with `uvx --from git+https://github.com/sineframe/keyless-mcp keyless-mcp` in every client config. After PyPI has the package: make `uvx keyless-mcp` (and `"args": ["keyless-mcp"]`) the main command in the Claude Code, Claude Desktop, Cursor, VS Code, Codex and "Choosing toolsets" examples, delete the "not on PyPI yet" paragraph, and turn the "After the first release" section into a short "Run from GitHub or a clone" note. Remove the Docker note about the first release too.
+- [ ] Re-read the README sentence about toolsets that have no adapters yet (the lines that say four of seven toolsets have adapters, and the table row for `finance`, `reference` and `fun`). Update it as adapters land. ADAPTERS.md keeps its own "no adapters yet" line current automatically.
 - [ ] Look the server up in the MCP Registry and confirm the listing.
 
 ## 5. Issues

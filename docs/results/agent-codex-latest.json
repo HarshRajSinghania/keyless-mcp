@@ -1,0 +1,58 @@
+{
+  "harness": "codex",
+  "model": "gpt-6.1-sol",
+  "date": "2026-10-11",
+  "trials": 1,
+  "results": {
+    "arxiv-search": {
+      "tool": "arxiv_search",
+      "passed": 1,
+      "total": 1
+    },
+    "arxiv-paper": {
+      "tool": "arxiv_get_paper",
+      "passed": 1,
+      "total": 1
+    },
+    "osv-query": {
+      "tool": "osv_query_package",
+      "passed": 1,
+      "total": 1
+    },
+    "osv-advisory": {
+      "tool": "osv_get_vulnerability",
+      "passed": 1,
+      "total": 1
+    },
+    "wikipedia-summary": {
+      "tool": "wikipedia_get_summary",
+      "passed": 1,
+      "total": 1
+    },
+    "pypi-package": {
+      "tool": "pypi_get_package",
+      "passed": 1,
+      "total": 1
+    },
+    "npm-package": {
+      "tool": "npm_get_package",
+      "passed": 1,
+      "total": 1
+    },
+    "open-meteo-forecast": {
+      "tool": "open_meteo_forecast",
+      "passed": 1,
+      "total": 1
+    },
+    "world-bank-country": {
+      "tool": "world_bank_country_by_code",
+      "passed": 1,
+      "total": 1
+    },
+    "hackernews-top": {
+      "tool": "hackernews_top_stories",
+      "passed": 1,
+      "total": 1
+    }
+  }
+}

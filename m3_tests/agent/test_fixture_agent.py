@@ -32,8 +32,8 @@ MANIFEST = {
 }
 
 
-def _run_script(adapter: str, calls: list[dict[str, Any]], tools: list[str]) -> Any:
-    """Run a scripted ACP agent against ``adapter``'s cassettes and return the M3 result."""
+def _run_script(adapter: str, calls: list[dict[str, Any]], tools: list[str]) -> tuple[Any, str]:
+    """Run a scripted ACP agent on ``adapter``'s cassettes; return ``(M3 result, server alias)``."""
     server = keyless_server(adapter, mode="replay")
     with MCPTestKit(env={}) as kit:
         agent = kit.agents([{"harness": "acp", "models": ["scripted"], "manifest": MANIFEST}])[0]

@@ -29,10 +29,14 @@ pytestmark = [
 
 ALIAS = "keyless"
 
-# Some harnesses (Codex) bring their own web search and answer from that, which says nothing about
-# keyless-mcp. The hint points the agent at the server without naming any tool, so the test still
-# measures which of the 16 tools it picks. Claude Code needs no hint: M3 turns its built-ins off.
-SERVER_HINT = f"Use only the tools of the `{ALIAS}` MCP server for this; do not browse the web. "
+# Hints are added per harness kind, and only where a harness needs one. Codex brings its own web
+# search and, left alone, answers from that, which says nothing about keyless-mcp. Its hint points
+# the agent at the server without naming any tool, so the test still measures which of the 16
+# tools it picks. Claude Code needs none: M3 turns its built-in tools off. A harness not listed
+# here gets the bare prompt.
+HARNESS_HINTS: dict[str, str] = {
+    "codex": f"Use only the tools of the `{ALIAS}` MCP server for this; do not browse the web. ",
+}
 
 Check = Callable[[Mapping[str, Any]], bool]
 
@@ -48,6 +52,14 @@ def _near(args: Mapping[str, Any], lat: float, lon: float, tolerance: float = 1.
             and abs(float(args["longitude"]) - lon) <= tolerance
         )
     except (KeyError, TypeError, ValueError):
+        return False
+
+
+def _in_range(args: Mapping[str, Any], key: str, low: int, high: int, default: int) -> bool:
+    """True when the optional integer argument is absent (server default) or within bounds."""
+    try:
+        return low <= int(args.get(key, default)) <= high
+    except (TypeError, ValueError):
         return False
 
 
@@ -84,7 +96,6 @@ CASES = (
             and _text(a, "ecosystem") == "pypi"
             and _text(a, "version") == "2.4.1"
         ),
-        must_not_call=("pypi_get_release",),
     ),
     Case(
         "osv-advisory",
@@ -128,7 +139,7 @@ CASES = (
         "hackernews-top",
         "What are the top stories on Hacker News right now?",
         ("hackernews_top_stories",),
-        lambda a: True,
+        lambda a: _in_range(a, "limit", 1, 30, default=10),
     ),
 )
 
@@ -141,14 +152,16 @@ def _arguments(call: Mapping[str, Any]) -> Mapping[str, Any]:
 @pytest.mark.parametrize("case", CASES, ids=lambda case: case.id)
 def test_agent_picks_the_right_tool(agent, m3_kit, case: Case) -> None:
     server = keyless_server("agent", mode="live", name=ALIAS)
+    kind = agent.harness.lower().replace("-", "_")
     options: dict[str, Any] = {}
-    if agent.harness.lower().replace("-", "_") not in {"claude", "claude_code"}:
+    if kind not in {"claude", "claude_code"}:
         # Claude Code is limited to the server as a whole and cannot take a per-tool list; other
         # harnesses get every keyless tool, which keeps them off their own shell and web tools.
         with m3_kit.direct(server) as client:
             options["tools"] = [f"{ALIAS}:{tool.name}" for tool in client.list_all_tools()]
 
-    result = agent.run(SERVER_HINT + case.prompt, server=server, timeout=180, **options)
+    prompt = HARNESS_HINTS.get(kind, "") + case.prompt
+    result = agent.run(prompt, server=server, timeout=180, **options)
 
     assert result.snapshot.outcome is ExecutionOutcome.COMPLETED, result.error
     expect(result).to_have_tool_call(

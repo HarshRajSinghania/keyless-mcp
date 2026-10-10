@@ -55,8 +55,12 @@ credentials in `.env` (see `.env.example`); `m3 test` loads it.
   because the isolated home hides it. A subscription token from `claude setup-token` also works
   when mapped with `M3_ARGS="--credential-env claude:CLAUDE_CODE_OAUTH_TOKEN=CLAUDE_CODE_OAUTH_TOKEN"`.
 - **Codex** (`HARNESS=codex`): reuses your `codex login` automatically, or set `OPENAI_API_KEY`.
-  Codex has its own web search and may answer from that. Each prompt therefore starts with a short
-  hint to use only the `keyless` MCP server. The hint names no tool.
+  Codex has its own web search and, left alone, answers from that instead of the server. So the
+  test adds a short hint to each Codex prompt: use only the `keyless` MCP server's tools, do not
+  browse the web. The hint names no tool. Hints live in `HARNESS_HINTS` in `test_tool_selection.py`,
+  keyed by harness kind. A harness gets one only if it needs it. Claude Code gets none because M3
+  turns its built-in tools off, and an unlisted harness gets the bare prompt. Add an entry if a
+  harness turns out to bypass the server.
 - **OpenCode / Pi**: `MODEL=provider/model` plus that provider's key.
 
 If the CLI is missing or no credential is found, the tests skip with the reason printed. They
@@ -92,6 +96,11 @@ against these cases:
 
 A single failure on a single trial can be the model having an off run. A prompt that fails across
 several trials points at the descriptions.
+
+## Latest results
+
+`docs/results/agent-codex-latest.json` holds the most recent full run (Codex, 1 trial per prompt):
+per prompt, the expected tool and passed/total trials. It is a snapshot of one model on one day.
 
 ## Adding a prompt
 

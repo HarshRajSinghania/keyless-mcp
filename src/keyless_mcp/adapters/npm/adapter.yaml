@@ -1,0 +1,8 @@
+name: npm
+title: npm registry
+description: Look up JavaScript packages on the npm registry (latest version, license, repository, maintainers, last publish) and search packages by keyword.
+toolset: dev
+base_url: https://registry.npmjs.org
+docs_url: https://github.com/npm/registry/blob/main/docs/REGISTRY-API.md
+rate_limit_per_minute: 60
+author: sineframe

@@ -1,0 +1,174 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/-/v1/search?size=3&text=lodash",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "objects": [
+        {
+          "dependents": "197592",
+          "downloads": {
+            "monthly": 775077698,
+            "weekly": 162476177
+          },
+          "flags": {
+            "insecure": 0
+          },
+          "package": {
+            "date": "2026-04-01T21:01:20.458Z",
+            "description": "Lodash modular utilities.",
+            "keywords": [
+              "modules",
+              "stdlib",
+              "util"
+            ],
+            "license": "MIT",
+            "links": {
+              "bugs": "https://github.com/lodash/lodash/issues",
+              "homepage": "https://lodash.com/",
+              "npm": "https://www.npmjs.com/package/lodash",
+              "repository": "git+https://github.com/lodash/lodash.git"
+            },
+            "maintainers": [
+              {
+                "email": "john.david.dalton@gmail.com",
+                "username": "jdalton"
+              }
+            ],
+            "name": "lodash",
+            "publisher": {
+              "email": "john.david.dalton@gmail.com",
+              "username": "jdalton"
+            },
+            "sanitized_name": "lodash",
+            "version": "4.18.1"
+          },
+          "score": {
+            "detail": {
+              "maintenance": 1,
+              "popularity": 1,
+              "quality": 1
+            },
+            "final": 2721.0586
+          },
+          "searchScore": 2721.0586,
+          "updated": "2026-10-10T01:03:37.891Z"
+        },
+        {
+          "dependents": "17621",
+          "downloads": {
+            "monthly": 223155679,
+            "weekly": 50136295
+          },
+          "flags": {
+            "insecure": 0
+          },
+          "package": {
+            "date": "2026-04-01T21:04:15.518Z",
+            "description": "Lodash exported as ES modules.",
+            "keywords": [
+              "es6",
+              "modules",
+              "stdlib",
+              "util"
+            ],
+            "license": "MIT",
+            "links": {
+              "bugs": "https://github.com/lodash/lodash-cli/issues",
+              "homepage": "https://lodash.com/custom-builds",
+              "npm": "https://www.npmjs.com/package/lodash-es",
+              "repository": "git+https://github.com/lodash/lodash.git"
+            },
+            "maintainers": [
+              {
+                "email": "mathias@qiwi.be",
+                "username": "mathias"
+              },
+              {
+                "email": "john.david.dalton@gmail.com",
+                "username": "jdalton"
+              },
+              {
+                "email": "benjamin@dev.ofcr.se",
+                "username": "bnjmnt4n"
+              }
+            ],
+            "name": "lodash-es",
+            "publisher": {
+              "email": "john.david.dalton@gmail.com",
+              "username": "jdalton"
+            },
+            "sanitized_name": "lodash-es",
+            "version": "4.18.1"
+          },
+          "score": {
+            "detail": {
+              "maintenance": 1,
+              "popularity": 1,
+              "quality": 1
+            },
+            "final": 594.7603
+          },
+          "searchScore": 594.7603,
+          "updated": "2026-10-10T00:23:22.679Z"
+        },
+        {
+          "dependents": "11396",
+          "downloads": {
+            "monthly": 216640433,
+            "weekly": 48092560
+          },
+          "flags": {
+            "insecure": 0
+          },
+          "package": {
+            "date": "2026-10-09T18:46:42.671Z",
+            "description": "TypeScript definitions for lodash",
+            "keywords": [],
+            "license": "MIT",
+            "links": {
+              "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/lodash",
+              "npm": "https://www.npmjs.com/package/@types/lodash",
+              "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+            },
+            "maintainers": [
+              {
+                "email": "ts-npm-types@microsoft.com",
+                "username": "types"
+              }
+            ],
+            "name": "@types/lodash",
+            "publisher": {
+              "actor": {
+                "email": "ts-npm-types@microsoft.com",
+                "name": "types",
+                "type": "user"
+              },
+              "email": "ts-npm-types@microsoft.com",
+              "username": "types"
+            },
+            "sanitized_name": "@types/lodash",
+            "version": "4.17.26"
+          },
+          "score": {
+            "detail": {
+              "maintenance": 1,
+              "popularity": 1,
+              "quality": 1
+            },
+            "final": 591.1133
+          },
+          "searchScore": 591.1133,
+          "updated": "2026-10-10T00:20:33.207Z"
+        }
+      ],
+      "time": "2026-10-10T19:47:37.842Z",
+      "total": 12996
+    }
+  }
+}

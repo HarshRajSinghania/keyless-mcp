@@ -1,0 +1,251 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/@isaacs%2Fstring-locale-compare",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "_id": "@isaacs/string-locale-compare",
+      "_rev": "4-e463d762a9436ecc806971f320cfec92",
+      "author": {
+        "email": "i@izs.me",
+        "name": "Isaac Z. Schlueter",
+        "url": "https://izs.me"
+      },
+      "bugs": {
+        "url": "https://github.com/isaacs/string-locale-compare/issues"
+      },
+      "description": "Compare strings with Intl.Collator if available, falling back to String.localeCompare otherwise",
+      "dist-tags": {
+        "latest": "1.1.0"
+      },
+      "homepage": "https://github.com/isaacs/string-locale-compare#readme",
+      "license": "ISC",
+      "maintainers": [
+        {
+          "email": "i@izs.me",
+          "name": "isaacs"
+        }
+      ],
+      "name": "@isaacs/string-locale-compare",
+      "readme": "# @isaacs/string-locale-compare\n\nCompare strings with Intl.Collator if available, falling back to\nString.localeCompare otherwise.\n\nThis also forces the use of a specific locale, to avoid using the system\nlocale, which is non-deterministic.\n\n## USAGE\n\n```js\nconst stringLocaleCompare = require('@isaacs/string-locale-compare')\n\nmyArrayOfStrings.sort(stringLocaleCompare('en'))\n\n// can also pass extra options\nmyArrayOfNumericStrings.sort(stringLocaleCompare('en', { numeric: true }))\n```\n\n## API\n\n`stringLocaleCompare(locale, [options])`\n\nLocale is required, must be a valid locale string.\n\nOptions is optional.  The following options are supported:\n\n* `sensitivity`\n* `numeric`\n* `ignorePunctuation`\n* `caseFirst`\n",
+      "readmeFilename": "README.md",
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/isaacs/string-locale-compare.git"
+      },
+      "time": {
+        "1.0.0": "2021-09-21T21:53:43.341Z",
+        "1.0.1": "2021-09-21T22:09:44.845Z",
+        "1.1.0": "2021-09-28T18:14:13.693Z",
+        "created": "2021-09-21T21:53:43.168Z",
+        "modified": "2022-04-05T21:11:22.800Z"
+      },
+      "versions": {
+        "1.0.0": {
+          "_hasShrinkwrap": false,
+          "_id": "@isaacs/string-locale-compare@1.0.0",
+          "_nodeVersion": "16.5.0",
+          "_npmOperationalInternal": {
+            "host": "s3://npm-registry-packages",
+            "tmp": "tmp/string-locale-compare_1.0.0_1632261223207_0.21290938050693864"
+          },
+          "_npmUser": {
+            "email": "i@izs.me",
+            "name": "isaacs"
+          },
+          "_npmVersion": "7.23.0",
+          "author": {
+            "email": "i@izs.me",
+            "name": "Isaac Z. Schlueter",
+            "url": "https://izs.me"
+          },
+          "bugs": {
+            "url": "https://github.com/isaacs/string-locale-compare/issues"
+          },
+          "description": "Compare strings with Intl.Collator if available, falling back to String.localeCompare otherwise",
+          "devDependencies": {
+            "tap": "^15.0.9"
+          },
+          "directories": {},
+          "dist": {
+            "fileCount": 4,
+            "integrity": "sha512-R3acQDJm066Tr5Gb+OhiEkKyy94F2p6dkcUI6J8KQuinqgg5HszX/H4vepKxREDbiVR9pGKOD9Jo+RTDux+zLA==",
+            "shasum": "2bbd680395d205a022b76aa01910f6d1c48cf948",
+            "signatures": [
+              {
+                "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+                "sig": "MEQCIGQIb168FJrWHmlY+gGW7kR+4bHXzldRZ3FKNI7CTGb+AiBJ7Hl2nJ5gq2KksgcDvjupCGIDW8l/XAFXFmHB9QNcFA=="
+              }
+            ],
+            "tarball": "https://registry.npmjs.org/@isaacs/string-locale-compare/-/string-locale-compare-1.0.0.tgz",
+            "unpackedSize": 2414
+          },
+          "gitHead": "3a53b04c69f5020e66b3d59868657527c50d7e45",
+          "homepage": "https://github.com/isaacs/string-locale-compare#readme",
+          "license": "ISC",
+          "main": "index.js",
+          "maintainers": [
+            {
+              "email": "i@izs.me",
+              "name": "isaacs"
+            }
+          ],
+          "name": "@isaacs/string-locale-compare",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/isaacs/string-locale-compare.git"
+          },
+          "scripts": {
+            "postversion": "npm publish",
+            "prepublishOnly": "git push origin --follow-tags",
+            "preversion": "npm test",
+            "snap": "tap",
+            "test": "tap"
+          },
+          "tap": {
+            "check-coverage": true
+          },
+          "version": "1.0.0"
+        },
+        "1.0.1": {
+          "_hasShrinkwrap": false,
+          "_id": "@isaacs/string-locale-compare@1.0.1",
+          "_nodeVersion": "16.5.0",
+          "_npmOperationalInternal": {
+            "host": "s3://npm-registry-packages",
+            "tmp": "tmp/string-locale-compare_1.0.1_1632262184670_0.7870204010396045"
+          },
+          "_npmUser": {
+            "email": "i@izs.me",
+            "name": "isaacs"
+          },
+          "_npmVersion": "7.23.0",
+          "author": {
+            "email": "i@izs.me",
+            "name": "Isaac Z. Schlueter",
+            "url": "https://izs.me"
+          },
+          "bugs": {
+            "url": "https://github.com/isaacs/string-locale-compare/issues"
+          },
+          "description": "Compare strings with Intl.Collator if available, falling back to String.localeCompare otherwise",
+          "devDependencies": {
+            "tap": "^15.0.9"
+          },
+          "directories": {},
+          "dist": {
+            "fileCount": 4,
+            "integrity": "sha512-AknEkBKSyAcIpl7SIUp12bs1rOmTDp9ojfDI9hvXl6qHqUCcaswkZOslbfdEbzI+8OPatiixY9AFKaUUpgGoBw==",
+            "shasum": "f2852dfe90b4b0caccb3132c36b59a59afc48e05",
+            "signatures": [
+              {
+                "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+                "sig": "MEUCIBgfWPafah7qw3FtRWmsL8VFRGS6CKlKDggKhv2AjJ07AiEAjjuzlfyA1/ZPYZKiXjlzw/IaiktU+H9WIFDzVCiR+jc="
+              }
+            ],
+            "tarball": "https://registry.npmjs.org/@isaacs/string-locale-compare/-/string-locale-compare-1.0.1.tgz",
+            "unpackedSize": 2430
+          },
+          "gitHead": "81073be4066456f323acc87caed66325a24deba3",
+          "homepage": "https://github.com/isaacs/string-locale-compare#readme",
+          "license": "ISC",
+          "main": "index.js",
+          "maintainers": [
+            {
+              "email": "i@izs.me",
+              "name": "isaacs"
+            }
+          ],
+          "name": "@isaacs/string-locale-compare",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/isaacs/string-locale-compare.git"
+          },
+          "scripts": {
+            "postversion": "npm publish",
+            "prepublishOnly": "git push origin --follow-tags",
+            "preversion": "npm test",
+            "snap": "tap",
+            "test": "tap"
+          },
+          "tap": {
+            "check-coverage": true
+          },
+          "version": "1.0.1"
+        },
+        "1.1.0": {
+          "_hasShrinkwrap": false,
+          "_id": "@isaacs/string-locale-compare@1.1.0",
+          "_nodeVersion": "16.5.0",
+          "_npmOperationalInternal": {
+            "host": "s3://npm-registry-packages",
+            "tmp": "tmp/string-locale-compare_1.1.0_1632852853490_0.11487956384689357"
+          },
+          "_npmUser": {
+            "email": "i@izs.me",
+            "name": "isaacs"
+          },
+          "_npmVersion": "7.24.1",
+          "author": {
+            "email": "i@izs.me",
+            "name": "Isaac Z. Schlueter",
+            "url": "https://izs.me"
+          },
+          "bugs": {
+            "url": "https://github.com/isaacs/string-locale-compare/issues"
+          },
+          "description": "Compare strings with Intl.Collator if available, falling back to String.localeCompare otherwise",
+          "devDependencies": {
+            "tap": "^15.0.9"
+          },
+          "directories": {},
+          "dist": {
+            "fileCount": 4,
+            "integrity": "sha512-SQ7Kzhh9+D+ZW9MA0zkYv3VXhIDNx+LzM6EJ+/65I3QY+enU6Itte7E5XX7EWrqLW2FN4n06GWzBnPoC3th2aQ==",
+            "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJh2MFwCRA9TVsSAnZWagAAiRQP/2AUYKPKHT+vNnG8MU/C\nSWLL9j1PEOuuK8qrUOisAPPFoTsax33FPq23BqFfjdMwvB+vRcpUHlJgSrB5\nmcPIOrGZZEo9hbyEFtxf1z+RbArJThIVpb1kiBv74K0mG13fD6TDKTD+XNVc\nrlfTg52u+J48jClpcc1SUTy514hwnLlwZeq1az5gVWBXwJ5dQh4rsODxeC7k\nSQp/uAcBJNXibk0dy7RgdixjA8gnzYyVPw1qu7v+AQDUQRM3rhSFNm5ztwP9\nD692zZ/sf4qcv06J1r9gETI/txNx9h1FlndLL9PCj1I+fRV5vVahLx57sCKo\nEH+K72ZnsaIGwf5Ig5+6u3kxDXcj83JxtLJxq9GI0dXh4YJKRdlg7EpI1LIT\n/g9XWSER4XqO0ZfO6GJ4BE5R29iKFr5r3f8qJnWOdPg7lJQrX+UQ6HgVm/S1\n4QOY8Biv6GFbEkBPOGrqfJ181yynobItDhesPDN2wgUlmCuPgJoTjJIYrFR9\nHsP195b0ZR3w+zVHRWHuZ15l9Quv6sRPkbCkyJfszZJM3ouWgKk/gPDCQEg6\ngLESSYxgGfhjYgof0NFZ74980sRpWyXu81HIJ2LzgLoROazO4h0O4ZJWzhjq\nZfhQlglNDieK5F5I0V3TIlFP6fZl4+jRS0IKOI8HPN1rcvvFNyTpcfhs42RL\nwtV5\r\n=nXSR\r\n-----END PGP SIGNATURE-----\r\n",
+            "shasum": "291c227e93fd407a96ecd59879a35809120e432b",
+            "signatures": [
+              {
+                "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+                "sig": "MEUCIQCeEW+ZcDwgwMQjI4OjARJ4Fz+KXua4OvULu6PZpgfzLQIgO4cj0rwFjgND2N1WLZ1mW/5Ls4nwLkZtLq0QTsRDAfY="
+              }
+            ],
+            "tarball": "https://registry.npmjs.org/@isaacs/string-locale-compare/-/string-locale-compare-1.1.0.tgz",
+            "unpackedSize": 3162
+          },
+          "gitHead": "56348d643b863948f33464350d9aa5d540156200",
+          "homepage": "https://github.com/isaacs/string-locale-compare#readme",
+          "license": "ISC",
+          "main": "index.js",
+          "maintainers": [
+            {
+              "email": "i@izs.me",
+              "name": "isaacs"
+            }
+          ],
+          "name": "@isaacs/string-locale-compare",
+          "repository": {
+            "type": "git",
+            "url": "git+https://github.com/isaacs/string-locale-compare.git"
+          },
+          "scripts": {
+            "postversion": "npm publish",
+            "prepublishOnly": "git push origin --follow-tags",
+            "preversion": "npm test",
+            "snap": "tap",
+            "test": "tap"
+          },
+          "tap": {
+            "check-coverage": true
+          },
+          "version": "1.1.0"
+        }
+      }
+    }
+  }
+}

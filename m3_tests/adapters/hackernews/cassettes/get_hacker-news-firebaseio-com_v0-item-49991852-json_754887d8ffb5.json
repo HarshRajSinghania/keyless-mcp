@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://hacker-news.firebaseio.com/v0/item/49991852.json",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "by": "Michelangelo11",
+      "descendants": 16,
+      "id": 49991852,
+      "kids": [
+        50036515,
+        50036418,
+        50036176,
+        50036420,
+        50036475,
+        50036442,
+        50036158,
+        50036105
+      ],
+      "score": 70,
+      "time": 1791376240,
+      "title": "2D Vehicles",
+      "type": "story",
+      "url": "https://patkerr.co.uk/2d-vehicles/"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://hacker-news.firebaseio.com/v0/item/50034081.json",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "by": "Curiositry",
+      "descendants": 32,
+      "id": 50034081,
+      "kids": [
+        50034503,
+        50034463,
+        50034662,
+        50035733,
+        50034422,
+        50034663,
+        50034686,
+        50034480,
+        50036116,
+        50034558,
+        50034232,
+        50036221,
+        50035661
+      ],
+      "score": 89,
+      "time": 1791647221,
+      "title": "Knuth reward check",
+      "type": "story",
+      "url": "https://www.thomas-huehn.com/knuth-reward-check/"
+    }
+  }
+}

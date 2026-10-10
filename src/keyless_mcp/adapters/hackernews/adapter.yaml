@@ -1,0 +1,8 @@
+name: hackernews
+title: Hacker News
+description: Read the current top stories on Hacker News and fetch any story, comment, job or poll by id (official Firebase API).
+toolset: news
+base_url: https://hacker-news.firebaseio.com/v0
+docs_url: https://github.com/HackerNews/API
+rate_limit_per_minute: 600
+author: sineframe

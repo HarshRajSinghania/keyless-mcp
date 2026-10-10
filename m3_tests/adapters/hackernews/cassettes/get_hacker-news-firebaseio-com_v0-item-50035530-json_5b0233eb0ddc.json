@@ -1,0 +1,25 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://hacker-news.firebaseio.com/v0/item/50035530.json",
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "by": "tosh",
+      "descendants": 1,
+      "id": 50035530,
+      "kids": [
+        50036233
+      ],
+      "score": 19,
+      "time": 1791655729,
+      "title": "Why DuckDB 2.0 is faster",
+      "type": "story",
+      "url": "https://motherduck.com/blog/why-duckdb-20-is-faster/"
+    }
+  }
+}

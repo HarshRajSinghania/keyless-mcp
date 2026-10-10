@@ -82,7 +82,7 @@ def register(tools: ToolRegistry, http: AdapterHttp) -> None:
             {
                 "latitude": latitude,
                 "longitude": longitude,
-                "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode",
+                "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code",
                 "timezone": "auto",
                 "forecast_days": days,
             },
@@ -91,7 +91,7 @@ def register(tools: ToolRegistry, http: AdapterHttp) -> None:
         units = data.get("daily_units") or {}
         forecast = []
         for i, date in enumerate(daily["time"]):
-            code = daily["weathercode"][i]
+            code = daily["weather_code"][i]
             forecast.append(
                 {
                     "date": date,

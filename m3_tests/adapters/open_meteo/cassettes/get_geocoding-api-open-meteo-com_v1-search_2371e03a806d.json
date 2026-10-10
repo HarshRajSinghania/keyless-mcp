@@ -9,7 +9,7 @@
     "content_type": "application/json",
     "body_format": "json",
     "body": {
-      "generationtime_ms": 0.5246401,
+      "generationtime_ms": 0.5258322,
       "results": [
         {
           "admin1": "State of Berlin",

@@ -5,9 +5,12 @@ export PATH := $(HOME)/.local/bin:$(PATH)
 PY := .venv/bin/python
 M3 := scripts/m3
 TOOLSET ?= dev
+HARNESS ?= claude
+MODEL ?= sonnet
+TRIALS ?= 1
 
 .DEFAULT_GOAL := help
-.PHONY: help setup test test-live record new-adapter lint fmt ui run tools
+.PHONY: help setup test test-live agent record new-adapter lint fmt ui run tools
 
 help: ## List the available commands
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-12s %s\n", $$1, $$2}'
@@ -21,7 +24,11 @@ test: ## Run all tests offline (replays cassettes; no network, no API keys)
 	KEYLESS_MCP_HTTP_MODE=replay $(M3) test --python $(PY) -- m3_tests -m "not live and not agent" -q
 
 test-live: ## Run the live smoke tests against the real APIs (needs network)
-	KEYLESS_MCP_HTTP_MODE=live $(M3) test --python $(PY) -- m3_tests -m live -q
+	KEYLESS_MCP_HTTP_MODE=live $(M3) test --python $(PY) -- m3_tests -m "live and not agent" -q
+
+agent: ## Real-agent tool-selection tests (costs tokens): make agent HARNESS=codex MODEL=<id> TRIALS=3 [K=osv M3_ARGS=...]
+	@# Needs a harness CLI plus credentials; see docs/agent-testing.md and .env.example.
+	KEYLESS_MCP_HTTP_MODE=live $(M3) test --python $(PY) --harness $(HARNESS)=$(MODEL) --trials $(TRIALS) $(M3_ARGS) -- m3_tests/agent -m agent $(if $(K),-k "$(K)") -q -rs
 
 record: ## Re-record an adapter's cassettes from the real API: make record ADAPTER=arxiv
 	@test -n "$(ADAPTER)" || { echo "usage: make record ADAPTER=<name>"; exit 1; }

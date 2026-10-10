@@ -30,6 +30,7 @@ def keyless_server(
     *,
     mode: str | None = None,
     cassettes: Path | None = None,
+    name: str | None = None,
 ) -> StdioServer:
     """An M3 ``StdioServer`` running ``python -m keyless_mcp`` against one adapter's cassettes.
 
@@ -38,6 +39,8 @@ def keyless_server(
     ``live``). Pass ``mode`` to force one, which is how ``live`` tests stay live under replay.
     ``cassettes`` overrides the cassette directory (for tests that craft their own cassettes);
     otherwise ``KEYLESS_MCP_RECORD_ROOT``, when set, redirects it to ``<root>/<adapter_name>``.
+    ``name`` overrides the server alias (default ``keyless-<adapter_name>``); agent tests use it to
+    expose every tool under one short alias.
     """
     record_root = os.environ.get(RECORD_ROOT_ENV)
     if cassettes is None and record_root:
@@ -46,7 +49,7 @@ def keyless_server(
     if toolsets is not None:
         args += ["--toolsets", ",".join(toolsets)]
     return StdioServer(
-        name=f"keyless-{adapter_name}",
+        name=name or f"keyless-{adapter_name}",
         command=sys.executable,
         args=tuple(args),
         cwd=str(PROJECT_ROOT),

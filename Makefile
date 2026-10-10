@@ -10,7 +10,7 @@ MODEL ?= sonnet
 TRIALS ?= 1
 
 .DEFAULT_GOAL := help
-.PHONY: help setup test test-live agent record new-adapter lint fmt ui run tools
+.PHONY: help setup test test-live agent record new-adapter adapters-md lint fmt ui run tools
 
 help: ## List the available commands
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-12s %s\n", $$1, $$2}'
@@ -48,6 +48,9 @@ record: ## Re-record an adapter's cassettes from the real API: make record ADAPT
 new-adapter: ## Scaffold an adapter: make new-adapter NAME=open_meteo TOOLSET=geo
 	@test -n "$(NAME)" || { echo "usage: make new-adapter NAME=<name> [TOOLSET=science|dev|geo|news]"; exit 1; }
 	uv run python scripts/new_adapter.py $(NAME) --toolset $(TOOLSET)
+
+adapters-md: ## Regenerate ADAPTERS.md from the adapters and docs/results/agent-*-latest.json
+	uv run python scripts/gen_adapters_md.py
 
 lint: ## Check code style (ruff check + ruff format --check)
 	uv run ruff check .

@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://api.osv.dev/v1/query",
+    "body": {
+      "package": {
+        "name": "jinja2",
+        "ecosystem": "PyPI"
+      },
+      "version": "3.1.6"
+    }
+  },
+  "response": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {}
+  }
+}

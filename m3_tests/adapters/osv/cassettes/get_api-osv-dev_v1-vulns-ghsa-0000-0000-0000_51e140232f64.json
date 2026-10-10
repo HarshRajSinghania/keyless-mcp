@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://api.osv.dev/v1/vulns/GHSA-0000-0000-0000",
+    "body": null
+  },
+  "response": {
+    "status": 404,
+    "content_type": "application/json",
+    "body_format": "json",
+    "body": {
+      "code": 5,
+      "message": "Vulnerability not found"
+    }
+  }
+}

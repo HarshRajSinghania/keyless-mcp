@@ -1,0 +1,70 @@
+name: New adapter
+description: Propose a free public API that needs no key.
+title: "adapter: "
+labels: ["adapter"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an API. Please check the [existing adapters](https://github.com/sineframe/keyless-mcp/blob/main/ADAPTERS.md) and open issues first. If you want to build it yourself, say so below and read [CONTRIBUTING.md](https://github.com/sineframe/keyless-mcp/blob/main/CONTRIBUTING.md).
+  - type: input
+    id: api-name
+    attributes:
+      label: API name
+      description: The name of the service.
+      placeholder: Crossref
+    validations:
+      required: true
+  - type: input
+    id: docs-url
+    attributes:
+      label: Documentation URL
+      description: A link to the API's official documentation.
+      placeholder: https://api.crossref.org/swagger-ui/index.html
+    validations:
+      required: true
+  - type: dropdown
+    id: toolset
+    attributes:
+      label: Toolset
+      description: Where it fits best.
+      options:
+        - science
+        - dev
+        - geo
+        - news
+        - Something else (explain below)
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What would an agent use it for?
+      description: One or two sentences on the questions it would answer.
+    validations:
+      required: true
+  - type: textarea
+    id: tools
+    attributes:
+      label: Proposed tools
+      description: Tool names (`<adapter>_<verb>`), their parameters, and one example request URL with the fields you would return.
+      placeholder: |
+        crossref_search(query: str, rows: int = 5): search works by free text.
+        Example: https://api.crossref.org/works?query=attention&rows=2
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I called the API without any key, token or account and it worked.
+          required: true
+        - label: I read the API's terms of use and they allow this kind of automated, read-only use.
+          required: true
+        - label: I am willing to build this adapter myself.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Rate limits, quirks, or links to related discussion.

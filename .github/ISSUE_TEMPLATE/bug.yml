@@ -1,0 +1,49 @@
+name: Bug report
+description: A tool returns the wrong thing, fails, or the server will not start.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. If the failure is an upstream API returning a 404 or a 429, the tool error message says so. Please include it anyway, it helps to see.
+  - type: input
+    id: version
+    attributes:
+      label: keyless-mcp version
+      description: Output of `keyless-mcp --version`, or the commit if you run from source.
+      placeholder: keyless-mcp 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: MCP client
+      description: The client and version you use.
+      placeholder: Claude Code 2.1.296
+    validations:
+      required: true
+  - type: input
+    id: how-run
+    attributes:
+      label: How you run the server
+      description: The command or config, including any `--toolsets`.
+      placeholder: uvx keyless-mcp --toolsets dev
+  - type: input
+    id: tool
+    attributes:
+      label: Tool name
+      description: The tool that misbehaved, if there is one.
+      placeholder: osv_query_package
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got. Paste the tool arguments and the full error text.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      description: Server output or a client log, if you have it. Remove anything private.
+      render: shell

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea
+    url: https://github.com/sineframe/keyless-mcp/discussions
+    about: Ask how something works or float an idea in Discussions before opening an issue.
+  - name: Report a security problem
+    url: https://github.com/sineframe/keyless-mcp/blob/main/SECURITY.md
+    about: Do not open a public issue for a vulnerability. Follow the instructions in SECURITY.md.

@@ -36,13 +36,13 @@
             },
             "maintainers": [
               {
-                "email": "john.david.dalton@gmail.com",
+                "email": "redacted@example.invalid",
                 "username": "jdalton"
               }
             ],
             "name": "lodash",
             "publisher": {
-              "email": "john.david.dalton@gmail.com",
+              "email": "redacted@example.invalid",
               "username": "jdalton"
             },
             "sanitized_name": "lodash",
@@ -86,21 +86,21 @@
             },
             "maintainers": [
               {
-                "email": "mathias@qiwi.be",
+                "email": "redacted@example.invalid",
                 "username": "mathias"
               },
               {
-                "email": "john.david.dalton@gmail.com",
+                "email": "redacted@example.invalid",
                 "username": "jdalton"
               },
               {
-                "email": "benjamin@dev.ofcr.se",
+                "email": "redacted@example.invalid",
                 "username": "bnjmnt4n"
               }
             ],
             "name": "lodash-es",
             "publisher": {
-              "email": "john.david.dalton@gmail.com",
+              "email": "redacted@example.invalid",
               "username": "jdalton"
             },
             "sanitized_name": "lodash-es",
@@ -138,18 +138,18 @@
             },
             "maintainers": [
               {
-                "email": "ts-npm-types@microsoft.com",
+                "email": "redacted@example.invalid",
                 "username": "types"
               }
             ],
             "name": "@types/lodash",
             "publisher": {
               "actor": {
-                "email": "ts-npm-types@microsoft.com",
+                "email": "redacted@example.invalid",
                 "name": "types",
                 "type": "user"
               },
-              "email": "ts-npm-types@microsoft.com",
+              "email": "redacted@example.invalid",
               "username": "types"
             },
             "sanitized_name": "@types/lodash",

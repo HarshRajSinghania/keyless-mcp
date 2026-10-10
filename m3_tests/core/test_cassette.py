@@ -89,3 +89,51 @@ def test_object_keys_are_sorted_so_rerecords_do_not_produce_noisy_diffs(tmp_path
     assert list(stored["a"]) == ["y", "z"]
     assert list(stored["a"]["y"][0]) == ["p", "q"]
     assert cassette.load(tmp_path, "GET", url, None).body == body
+
+
+def test_emails_are_redacted_everywhere_in_a_stored_cassette(tmp_path) -> None:
+    """Maintainer contacts in a registry response never reach disk, in JSON or text bodies."""
+    url = "https://registry.test/pkg"
+    body = {
+        "author": {"name": "Ada", "email": "ada.lovelace+npm@example.org"},
+        "maintainers": ["Bob <bob@corp.example.com>", "plain text"],
+        "nested": [{"contact": "mailto:carol@sub.domain.io?subject=hi"}],
+    }
+    path = cassette.save(
+        tmp_path, "GET", url, None, cassette.RecordedResponse(200, "application/json", body)
+    )
+    raw = path.read_text()
+    assert not any(e in raw for e in ("ada.lovelace", "bob@", "carol@")), raw
+    stored = json.loads(raw)["response"]["body"]
+    assert stored["author"] == {"name": "Ada", "email": "redacted@example.invalid"}
+    assert stored["maintainers"] == ["Bob <redacted@example.invalid>", "plain text"]
+    assert stored["nested"][0]["contact"] == "mailto:redacted@example.invalid?subject=hi"
+    # The key came from the real request, so replay still finds the (redacted) cassette.
+    assert cassette.load(tmp_path, "GET", url, None).body["author"]["name"] == "Ada"
+
+    text_path = cassette.save(
+        tmp_path,
+        "GET",
+        "https://registry.test/feed",
+        None,
+        cassette.RecordedResponse(200, "text/plain", "line one\nwrite to me@host.test now\n"),
+    )
+    assert "me@host.test" not in text_path.read_text()
+    assert cassette.load(tmp_path, "GET", "https://registry.test/feed").body == (
+        "line one\nwrite to redacted@example.invalid now\n"
+    )
+
+
+def test_redaction_keeps_structure_is_idempotent_and_leaves_keys_alone() -> None:
+    value = {"a@b.co": ["x@y.io", 3, None, {"k": "no email here"}]}
+    once = cassette.redact_emails(value)
+    assert once == {"a@b.co": ["redacted@example.invalid", 3, None, {"k": "no email here"}]}
+    assert cassette.redact_emails(once) == once
+
+
+def test_the_generic_git_ssh_user_is_dropped_so_repository_urls_still_parse() -> None:
+    """`git@github.com` is not a person; it is rewritten so a URL stays a URL."""
+    assert (
+        cassette.redact_emails("git+ssh://git@github.com/o/r.git") == "git+ssh://github.com/o/r.git"
+    )
+    assert cassette.redact_emails("git@github.com:o/r.git") == "ssh://github.com/o/r.git"

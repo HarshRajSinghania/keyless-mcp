@@ -33,11 +33,11 @@
       "license": "WTFPL",
       "maintainers": [
         {
-          "email": "maochenyan@gmail.com",
+          "email": "redacted@example.invalid",
           "name": "stevemao"
         },
         {
-          "email": "cameron.westland@autodesk.com",
+          "email": "redacted@example.invalid",
           "name": "westlac"
         }
       ],
@@ -46,7 +46,7 @@
       "readmeFilename": "README.md",
       "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+        "url": "git+ssh://github.com/stevemao/left-pad.git"
       },
       "time": {
         "0.0.0": "2014-03-14T09:09:20.762Z",
@@ -86,7 +86,7 @@
           "_id": "left-pad@0.0.0",
           "_nodeVersion": "0.0.0-fake",
           "_npmUser": {
-            "email": "support@npmjs.com",
+            "email": "redacted@example.invalid",
             "name": "npm"
           },
           "_npmVersion": "0.0.0-fake",
@@ -120,18 +120,18 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git@github.com:azer/left-pad.git"
+            "url": "ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -143,7 +143,7 @@
           "_id": "left-pad@0.0.1",
           "_nodeVersion": "0.0.0-fake",
           "_npmUser": {
-            "email": "support@npmjs.com",
+            "email": "redacted@example.invalid",
             "name": "npm"
           },
           "_npmVersion": "0.0.0-fake",
@@ -177,18 +177,18 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git@github.com:azer/left-pad.git"
+            "url": "ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -200,7 +200,7 @@
           "_id": "left-pad@0.0.2",
           "_nodeVersion": "0.0.0-fake",
           "_npmUser": {
-            "email": "support@npmjs.com",
+            "email": "redacted@example.invalid",
             "name": "npm"
           },
           "_npmVersion": "0.0.0-fake",
@@ -234,18 +234,18 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git@github.com:azer/left-pad.git"
+            "url": "ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -257,7 +257,7 @@
           "_id": "left-pad@0.0.3",
           "_nodeVersion": "5.1.1",
           "_npmUser": {
-            "email": "cameron.westland@autodesk.com",
+            "email": "redacted@example.invalid",
             "name": "westlac"
           },
           "_npmVersion": "3.7.5",
@@ -298,14 +298,14 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/azer/left-pad.git"
+            "url": "git+ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -317,7 +317,7 @@
           "_id": "left-pad@0.0.4",
           "_nodeVersion": "0.0.0-fake",
           "_npmUser": {
-            "email": "support@npmjs.com",
+            "email": "redacted@example.invalid",
             "name": "npm"
           },
           "_npmVersion": "0.0.0-fake",
@@ -351,18 +351,18 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git@github.com:azer/left-pad.git"
+            "url": "ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -374,7 +374,7 @@
           "_id": "left-pad@0.0.9",
           "_nodeVersion": "5.1.1",
           "_npmUser": {
-            "email": "cameron.westland@autodesk.com",
+            "email": "redacted@example.invalid",
             "name": "westlac"
           },
           "_npmVersion": "3.7.5",
@@ -415,14 +415,14 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/azer/left-pad.git"
+            "url": "git+ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -434,7 +434,7 @@
           "_id": "left-pad@1.0.0",
           "_nodeVersion": "0.0.0-fake",
           "_npmUser": {
-            "email": "support@npmjs.com",
+            "email": "redacted@example.invalid",
             "name": "npm"
           },
           "_npmVersion": "0.0.0-fake",
@@ -468,18 +468,18 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git@github.com:azer/left-pad.git"
+            "url": "ssh://github.com/azer/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -491,7 +491,7 @@
           "_id": "left-pad@1.0.1",
           "_nodeVersion": "5.1.1",
           "_npmUser": {
-            "email": "cameron.westland@autodesk.com",
+            "email": "redacted@example.invalid",
             "name": "westlac"
           },
           "_npmVersion": "3.7.5",
@@ -532,14 +532,14 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/camwest/left-pad.git"
+            "url": "git+ssh://github.com/camwest/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -555,7 +555,7 @@
             "tmp": "tmp/left-pad-1.0.2.tgz_1460566759509_0.5977452478837222"
           },
           "_npmUser": {
-            "email": "cameron.westland@autodesk.com",
+            "email": "redacted@example.invalid",
             "name": "westlac"
           },
           "_npmVersion": "3.7.5",
@@ -596,18 +596,18 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/camwest/left-pad.git"
+            "url": "git+ssh://github.com/camwest/left-pad.git"
           },
           "scripts": {
             "test": "node test"
@@ -623,7 +623,7 @@
             "tmp": "tmp/left-pad-1.1.0.tgz_1462100769265_0.8418141445145011"
           },
           "_npmUser": {
-            "email": "maochenyan@gmail.com",
+            "email": "redacted@example.invalid",
             "name": "stevemao"
           },
           "_npmVersion": "3.8.6",
@@ -666,22 +666,22 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "maochenyan@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "stevemao"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+            "url": "git+ssh://github.com/stevemao/left-pad.git"
           },
           "scripts": {
             "bench": "node perf/perf.js",
@@ -698,7 +698,7 @@
             "tmp": "tmp/left-pad-1.1.1.tgz_1467977138049_0.0575787469279021"
           },
           "_npmUser": {
-            "email": "maochenyan@gmail.com",
+            "email": "redacted@example.invalid",
             "name": "stevemao"
           },
           "_npmVersion": "2.15.1",
@@ -741,22 +741,22 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "maochenyan@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "stevemao"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+            "url": "git+ssh://github.com/stevemao/left-pad.git"
           },
           "scripts": {
             "bench": "node perf/perf.js",
@@ -773,7 +773,7 @@
             "tmp": "tmp/left-pad-1.1.2.tgz_1474712701766_0.3794678670819849"
           },
           "_npmUser": {
-            "email": "maochenyan@gmail.com",
+            "email": "redacted@example.invalid",
             "name": "stevemao"
           },
           "_npmVersion": "2.15.1",
@@ -816,22 +816,22 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "maochenyan@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "stevemao"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+            "url": "git+ssh://github.com/stevemao/left-pad.git"
           },
           "scripts": {
             "bench": "node perf/perf.js",
@@ -848,7 +848,7 @@
             "tmp": "tmp/left-pad-1.1.3.tgz_1475308865139_0.9894974469207227"
           },
           "_npmUser": {
-            "email": "maochenyan@gmail.com",
+            "email": "redacted@example.invalid",
             "name": "stevemao"
           },
           "_npmVersion": "2.15.1",
@@ -891,22 +891,22 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "maochenyan@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "stevemao"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+            "url": "git+ssh://github.com/stevemao/left-pad.git"
           },
           "scripts": {
             "bench": "node perf/perf.js",
@@ -923,7 +923,7 @@
             "tmp": "tmp/left-pad-1.2.0.tgz_1510897718867_0.7524343002587557"
           },
           "_npmUser": {
-            "email": "maochenyan@gmail.com",
+            "email": "redacted@example.invalid",
             "name": "stevemao"
           },
           "_npmVersion": "3.10.10",
@@ -966,22 +966,22 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "maochenyan@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "stevemao"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+            "url": "git+ssh://github.com/stevemao/left-pad.git"
           },
           "scripts": {
             "bench": "node perf/perf.js",
@@ -999,7 +999,7 @@
             "tmp": "tmp/left-pad_1.3.0_1523236245678_0.2849598021556574"
           },
           "_npmUser": {
-            "email": "maochenyan@gmail.com",
+            "email": "redacted@example.invalid",
             "name": "stevemao"
           },
           "_npmVersion": "5.5.1",
@@ -1044,22 +1044,22 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "sebmck@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "sebmck"
             },
             {
-              "email": "maochenyan@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "stevemao"
             },
             {
-              "email": "cameron.westland@autodesk.com",
+              "email": "redacted@example.invalid",
               "name": "westlac"
             }
           ],
           "name": "left-pad",
           "repository": {
             "type": "git",
-            "url": "git+ssh://git@github.com/stevemao/left-pad.git"
+            "url": "git+ssh://github.com/stevemao/left-pad.git"
           },
           "scripts": {
             "bench": "node perf/perf.js",

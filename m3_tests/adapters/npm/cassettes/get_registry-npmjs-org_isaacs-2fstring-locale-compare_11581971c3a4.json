@@ -12,7 +12,7 @@
       "_id": "@isaacs/string-locale-compare",
       "_rev": "4-e463d762a9436ecc806971f320cfec92",
       "author": {
-        "email": "i@izs.me",
+        "email": "redacted@example.invalid",
         "name": "Isaac Z. Schlueter",
         "url": "https://izs.me"
       },
@@ -27,7 +27,7 @@
       "license": "ISC",
       "maintainers": [
         {
-          "email": "i@izs.me",
+          "email": "redacted@example.invalid",
           "name": "isaacs"
         }
       ],
@@ -55,12 +55,12 @@
             "tmp": "tmp/string-locale-compare_1.0.0_1632261223207_0.21290938050693864"
           },
           "_npmUser": {
-            "email": "i@izs.me",
+            "email": "redacted@example.invalid",
             "name": "isaacs"
           },
           "_npmVersion": "7.23.0",
           "author": {
-            "email": "i@izs.me",
+            "email": "redacted@example.invalid",
             "name": "Isaac Z. Schlueter",
             "url": "https://izs.me"
           },
@@ -91,7 +91,7 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "i@izs.me",
+              "email": "redacted@example.invalid",
               "name": "isaacs"
             }
           ],
@@ -121,12 +121,12 @@
             "tmp": "tmp/string-locale-compare_1.0.1_1632262184670_0.7870204010396045"
           },
           "_npmUser": {
-            "email": "i@izs.me",
+            "email": "redacted@example.invalid",
             "name": "isaacs"
           },
           "_npmVersion": "7.23.0",
           "author": {
-            "email": "i@izs.me",
+            "email": "redacted@example.invalid",
             "name": "Isaac Z. Schlueter",
             "url": "https://izs.me"
           },
@@ -157,7 +157,7 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "i@izs.me",
+              "email": "redacted@example.invalid",
               "name": "isaacs"
             }
           ],
@@ -187,12 +187,12 @@
             "tmp": "tmp/string-locale-compare_1.1.0_1632852853490_0.11487956384689357"
           },
           "_npmUser": {
-            "email": "i@izs.me",
+            "email": "redacted@example.invalid",
             "name": "isaacs"
           },
           "_npmVersion": "7.24.1",
           "author": {
-            "email": "i@izs.me",
+            "email": "redacted@example.invalid",
             "name": "Isaac Z. Schlueter",
             "url": "https://izs.me"
           },
@@ -224,7 +224,7 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "i@izs.me",
+              "email": "redacted@example.invalid",
               "name": "isaacs"
             }
           ],

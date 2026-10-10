@@ -56,11 +56,11 @@
       "license": "MIT",
       "maintainers": [
         {
-          "email": "brian.woodward@gmail.com",
+          "email": "redacted@example.invalid",
           "name": "doowb"
         },
         {
-          "email": "github@sellside.com",
+          "email": "redacted@example.invalid",
           "name": "jonschlinkert"
         }
       ],
@@ -93,7 +93,7 @@
           "_id": "is-odd@0.1.0",
           "_nodeVersion": "0.12.0",
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "2.5.1",
@@ -147,7 +147,7 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             }
           ],
@@ -170,7 +170,7 @@
             "tmp": "tmp/is-odd-0.1.1.tgz_1481095079315_0.8302227731328458"
           },
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "3.10.3",
@@ -226,11 +226,11 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             },
             {
-              "email": "brian.woodward@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "doowb"
             }
           ],
@@ -273,7 +273,7 @@
             "tmp": "tmp/is-odd-0.1.2.tgz_1495890277574_0.012756465701386333"
           },
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "4.6.1",
@@ -339,11 +339,11 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             },
             {
-              "email": "brian.woodward@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "doowb"
             }
           ],
@@ -386,7 +386,7 @@
             "tmp": "tmp/is-odd-1.0.0.tgz_1495909096816_0.9196002101525664"
           },
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "4.6.1",
@@ -456,11 +456,11 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             },
             {
-              "email": "brian.woodward@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "doowb"
             }
           ],
@@ -502,7 +502,7 @@
             "tmp": "tmp/is-odd-2.0.0.tgz_1509514503241_0.6080242525786161"
           },
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "5.5.1",
@@ -575,11 +575,11 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "brian.woodward@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "doowb"
             },
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             }
           ],
@@ -622,7 +622,7 @@
             "tmp": "tmp/is-odd_3.0.0_1527703255498_0.6094765546992205"
           },
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "6.0.1",
@@ -698,11 +698,11 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "brian.woodward@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "doowb"
             },
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             }
           ],
@@ -745,7 +745,7 @@
             "tmp": "tmp/is-odd_3.0.1_1527797093116_0.1399721569178909"
           },
           "_npmUser": {
-            "email": "github@sellside.com",
+            "email": "redacted@example.invalid",
             "name": "jonschlinkert"
           },
           "_npmVersion": "6.0.1",
@@ -821,11 +821,11 @@
           "main": "index.js",
           "maintainers": [
             {
-              "email": "brian.woodward@gmail.com",
+              "email": "redacted@example.invalid",
               "name": "doowb"
             },
             {
-              "email": "github@sellside.com",
+              "email": "redacted@example.invalid",
               "name": "jonschlinkert"
             }
           ],

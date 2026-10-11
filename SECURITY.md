@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Please do not open a public issue for a security problem. Email [security@sineframe.com](mailto:security@sineframe.com) with:
+Please do not open a public issue for a security problem. Email [hello@sineframe.com](mailto:hello@sineframe.com) with:
 
 - what you found and which version or commit it affects
 - steps or a tool call that reproduces it

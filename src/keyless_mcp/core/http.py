@@ -1,1 +1,3 @@
-REAL_CONTENT_WILL_BE_INJECTED
+"""The one shared HTTP client every adapter uses.
+
+Adapters never import ht

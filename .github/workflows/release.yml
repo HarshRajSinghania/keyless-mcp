@@ -49,7 +49,6 @@ jobs:
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           version: ${{ env.UV_VERSION }}
-          python-version-file: .python-version
       - name: Install the project
         run: uv sync --locked
       - name: Tag, pyproject.toml, server.json and README agree

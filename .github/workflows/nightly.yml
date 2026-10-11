@@ -50,7 +50,6 @@ jobs:
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           version: ${{ env.UV_VERSION }}
-          python-version-file: .python-version
       - name: Set up the project and M3
         run: make setup
       - name: Run the live tests
@@ -166,7 +165,6 @@ jobs:
         if: steps.configured.outputs.run == 'true'
         with:
           version: ${{ env.UV_VERSION }}
-          python-version-file: .python-version
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         if: steps.configured.outputs.run == 'true'
         with:

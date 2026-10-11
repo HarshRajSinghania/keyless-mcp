@@ -1,3 +1,1 @@
-"""The one shared HTTP client every adapter uses.
-
-Adapters never import ht
+"""The one shared HTTP client every adapter uses.\n\nAdapters never import httpx. They call :class:`AdapterHttp` (``get_json``, ``get_text``,\n``post_json``), which gives them the User-Agent, timeouts, per-adapter rate limiting, offline\nrecord/replay and mapping of every upstream failure to a readable ``UpstreamError``.\n"""\nprint('test')\n
